@@ -17,7 +17,7 @@ app.get("/", function(request, response) {
 });
 
 app.get("/icon.json", function(request, response) {
-  response.sendFile(__dirname + "/views/icon.txt");
+  response.sendFile(__dirname + "/views/icon.json");
 });
 
 // listen for requests :)
