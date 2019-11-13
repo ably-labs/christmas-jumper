@@ -1,9 +1,12 @@
 const ActiveImageSelector = require("./commands/ActiveImageSelector");
 const SongDetector = require("./commands/SongDetector");
+
 const express = require("express");
+const bodyParser = require('body-parser');
 const app = express();
 
 app.use(express.static("public"));
+app.use(bodyParser.json({limit: '50mb'}));
 app.get("/", function(request, response) {
   response.sendFile(__dirname + "/views/index.html");
 });
@@ -19,11 +22,11 @@ app.get("/active-image", async (request, response) => {
 });
 
 app.post("/what-song", async (request, response) => {
-  console.log(request);
-  response.send(request);
-  //const selector = new SongDetector();
-  //const result = await selector.execute();
-  //response.send(result.body);
+  const base64encodedAudioBytes = request.body.bytes;
+  const byteArray = Buffer.from(base64encodedAudioBytes, 'base64');
+  const selector = new SongDetector();
+  const result = await selector.execute(byteArray);
+  response.send(result.body);
 });
 
 const listener = app.listen(process.env.PORT, function() {

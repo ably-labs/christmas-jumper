@@ -38,7 +38,7 @@
                     sampleRate: 48000,
                     channelCount: 2,
                     //mimeType: 'audio/webm;codecs=pcm'
-                    mimeType: 'audio/webm;codecs=opus'
+                    //mimeType: 'audio/webm;codecs=opus'
                 }
                 console.log(stream);
                 const mediaRecorder = new window.MediaRecorder(stream, options);
@@ -52,15 +52,20 @@
 
         async function postData(url = '', data) {
 
+            const base64String = btoa(String.fromCharCode.apply(null, new Uint8Array(data)));
+
             const response = await fetch(url, {
                     method: 'POST',
                     mode: 'same-origin',
                     cache: 'no-cache',
                     headers: {
-                       'Content-Type': 'audio/webm; codecs=pcm',
+                        'Content-Type': 'application/json',
+                       // 'Content-Type': 'audio/webm; codecs=opus',
                        // 'Content-Type': 'audio/webm; codecs=opus'
                     },
-                    body: data
+                    body: JSON.stringify({
+                        bytes: base64String
+                    })
                 });
 
             return await response.json(); // parses JSON response into native JavaScript objects
