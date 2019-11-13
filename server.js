@@ -19,9 +19,11 @@ app.get("/active-image", async (request, response) => {
 });
 
 app.post("/what-song", async (request, response) => {
-  const selector = new SongDetector();
-  const result = await selector.execute();
-  response.send(result.body);
+  console.log(request);
+  response.send(request);
+  //const selector = new SongDetector();
+  //const result = await selector.execute();
+  //response.send(result.body);
 });
 
 const listener = app.listen(process.env.PORT, function() {
