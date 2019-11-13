@@ -13,7 +13,7 @@
     "express": "^4.16.4"
   },
   "engines": {
-    "node": "8.x"
+    "node": "12.x"
   },
   "repository": {
     "url": "https://glitch.com/edit/#!/hello-express"
@@ -23,5 +23,8 @@
     "node",
     "glitch",
     "express"
-  ]
+  ],
+  "devDependencies": {
+    "jest": "^24.9.0"
+  }
 }
