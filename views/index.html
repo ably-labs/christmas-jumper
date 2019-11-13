@@ -1,58 +1,72 @@
-<!-- This is a static file -->
-<!-- served from your routes in server.js -->
-
-<!-- You might want to try something fancier: -->
-<!-- html/nunjucks docs: https://mozilla.github.io/nunjucks/ -->
-<!-- pug: https://pugjs.org/ -->
-<!-- haml: http://haml.info/ -->
-<!-- hbs(handlebars): http://handlebarsjs.com/ -->
-
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <title>Welcome to Glitch!</title>
-    <meta name="description" content="A cool thing made with Glitch">
-    <link id="favicon" rel="icon" href="https://glitch.com/edit/favicon-app.ico" type="image/x-icon">
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<html>
+<head>
+    <title>What's that song</title>
+</head>
+<body>
+    <p>Listening for music we know.</p>
 
-    <!-- import the webpage's stylesheet -->
-    <link rel="stylesheet" href="/style.css">
-    
-    <!-- import the webpage's client-side javascript file -->
-    <script src="/client.js" defer></script>
-  </head>
-  <body>
-    <header>
-      <h1>
-        A Dream of the Future
-      </h1>
-    </header>
+    <script>
 
-    <main>
-      <p class="bold">Oh hi,</p>
-      
-      <p>Tell me your hopes and dreams:</p>
-      
-      <form>
-        <input name="dream" type="text" maxlength="100" placeholder="Dreams!" aria-labelledby="submit-dream">
-        <button type="submit" id="submit-dream">Submit Dream</button>
-      </form>
-      
-      <section class="dreams">
-        <ul id="dreams"></ul>
-      </section>
-    </main>
+        function startRecording(recorder) {
+            recorder.ondataavailable = (e) => storeChunks(e, recorder.stream);
+            recorder.start();
+            console.log(recorder.state);
+            console.log("recorder started");
+            window.setTimeout(() => {
+                recorder.stop();
+                console.log("recorder stopped");
+                startRecording(recorder);
+            }, 15 * 1000);
+        }
 
-    <footer>
-      Made with <a href="https://glitch.com">Glitch</a>!
-    </footer>
 
-    <!-- include the Glitch button to show what the webpage is about and
-          to make it easier for folks to view source and remix -->
-    <div class="glitchButton" style="position:fixed;top:20px;right:20px;"></div>
-    <script src="https://button.glitch.me/button.js"></script>
+        async function storeChunks(e, stream) {
+            
+            console.log(e);
+            const data = await e.data.arrayBuffer();
+            const response = await postData('audiosearch', data);
+            console.log(response);
+        }
 
-  </body>
+        navigator.mediaDevices.getUserMedia({
+                audio: true,
+                video: false
+            })
+            .then(function(stream) {
+                const options = {
+                    sampleRate: 48000,
+                    channelCount: 2,
+                    mimeType: 'audio/webm;codecs=pcm'
+                }
+                console.log(stream);
+                const mediaRecorder = new window.MediaRecorder(stream, options);
+                
+                startRecording(mediaRecorder);
+            })
+            .catch(function(err) {
+                    console.log(`The following getUserMedia error occured: ${err}`);
+                }
+            );
+
+        async function postData(url = '', data) {
+
+            const response = await fetch(url, {
+                    method: 'POST',
+                    mode: 'same-origin',
+                    cache: 'no-cache',
+                    headers: {
+                       'Content-Type': 'audio/webm; codecs=pcm',
+                       // 'Content-Type': 'audio/webm; codecs=opus'
+                    },
+                    body: data
+                });
+
+            return await response.json(); // parses JSON response into native JavaScript objects
+        };
+
+     
+
+    </script>
+</body>
 </html>
