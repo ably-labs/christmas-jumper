@@ -18,7 +18,7 @@ app.get("/active-image", async (request, response) => {
   response.send(result.body);
 });
 
-app.post("/what-song", async (request, response) => {
+app.get("/what-song", async (request, response) => {
   const selector = new SongDetector();
   const result = await selector.execute();
   response.send(result.body);
