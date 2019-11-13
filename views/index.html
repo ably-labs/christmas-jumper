@@ -25,7 +25,7 @@
             
             console.log(e);
             const data = await e.data.arrayBuffer();
-            const response = await postData('audiosearch', data);
+            const response = await postData('/what-song', data);
             console.log(response);
         }
 
@@ -37,7 +37,8 @@
                 const options = {
                     sampleRate: 48000,
                     channelCount: 2,
-                    mimeType: 'audio/webm;codecs=pcm'
+                    //mimeType: 'audio/webm;codecs=pcm'
+                    mimeType: 'audio/webm;codecs=opus'
                 }
                 console.log(stream);
                 const mediaRecorder = new window.MediaRecorder(stream, options);
