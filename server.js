@@ -3,14 +3,12 @@ const express = require("express");
 const bodyParser = require('body-parser');
 
 const app = express();
-app.use(express.static("public"));
+
 app.use(bodyParser.json({limit: '50mb'}));
+app.use(express.static("public"));
+app.use("/", express.static(__dirname + "/public", { index: "index.html" }));
 
 const jumperApiSingleton = new JumperApi();
-
-app.get("/", (request, response) => {
-  response.sendFile(__dirname + "/views/index.html");
-});
 
 app.get("/active-image", async (request, response) => {
   const result = await jumperApiSingleton.getActiveImageKey();
