@@ -1,27 +1,52 @@
-Welcome to Glitch
+Christmas Jumper API
 =================
 
-Click `Show` in the header to see your app live. Updates to your code will instantly deploy and update live.
+A Node.js server + microphone collecting HTML page that detects songs, and returns various festive themed iconography.
 
-**Glitch** is the friendly community where you'll build the app of your dreams. Glitch lets you instantly create, remix, edit, and host an app, bot or site, and you can invite collaborators or helpers to simultaneously edit code with you.
+## Running
 
-Find out more [about Glitch](https://glitch.com/about).
+First, make sure you `npm install`.
 
+Browsing to the root of the webserver on http://localhost:12271 will take you to the audio capture page.
 
-Your Project
-------------
+You can start the app by running `npm start`.
 
-On the front-end,
-- edit `public/client.js`, `public/style.css` and `views/index.html`
-- drag in `assets`, like images or music, to add them to your project
+    > npm start
+    
+    > hello-express@0.0.1 start C:\dev\christmas-jumper
+    > node server.js
+    
+    Your app is listening on port 12271
 
-On the back-end,
-- your app starts at `server.js`
-- add frameworks and packages in `package.json`
-- safely store app secrets in `.env` (nobody can see this but you and people you invite)
+If you want to develop against this with hot-reload and debugging enabled, first, make sure you've installed nodemon
 
+    > npm install -g nodemon
+    
+then you can simply run `npm run devserver`
 
-Made by [Glitch](https://glitch.com/)
--------------------
+    > npm run devserver
+    
+    > hello-express@0.0.1 devserver C:\dev\christmas-jumper
+    > nodemon --inspect server.js
+    
+    [nodemon] 1.19.4
+    [nodemon] to restart at any time, enter `rs`
+    [nodemon] watching dir(s): *.*
+    [nodemon] watching extensions: js,mjs,json
+    [nodemon] starting `node --inspect server.js`
+    Debugger listening on ws://127.0.0.1:9229/5ce30222-84d5-4b69-81bd-23a6b1647594
+    For help, see: https://nodejs.org/en/docs/inspector
+    Your app is listening on port 12271
 
-\ ゜o゜)ノ
+This will run the server on the same port, with --inspect enabled to connect `VSCode` or `WebStorm` debuggers to step through the code.
+
+* For VSCode see: https://code.visualstudio.com/docs/nodejs/nodejs-debugging
+* For WebStorm see: https://www.jetbrains.com/help/webstorm/running-and-debugging-node-js.html
+
+## Usage
+
+Just open your browser!
+
+## Configuration
+
+Configuration for Azure storage buckets and AudD API keys is stored in config.js.

@@ -7,7 +7,9 @@
   "description": "A simple Node app built on Express, instantly up and running.",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "devserver": "nodemon --inspect server.js",
+    "debug": "node --inspect server.js"
   },
   "dependencies": {
     "@azure/identity": "^1.0.0",
@@ -33,6 +35,7 @@
     "express"
   ],
   "devDependencies": {
-    "jest": "^24.9.0"
+    "jest": "^24.9.0",
+    "nodemon": "^1.19.4"
   }
 }

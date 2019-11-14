@@ -7,7 +7,6 @@
     <p>Listening for music we know.</p>
 
     <script>
-
         function startRecording(recorder) {
             recorder.ondataavailable = (e) => storeChunks(e, recorder.stream);
             recorder.start();
@@ -20,59 +19,36 @@
             }, 15 * 1000);
         }
 
-
         async function storeChunks(e, stream) {
-            
-            console.log(e);
             const data = await e.data.arrayBuffer();
             const response = await postData('/what-song', data);
             console.log(response);
         }
 
-        navigator.mediaDevices.getUserMedia({
-                audio: true,
-                video: false
-            })
+        navigator.mediaDevices.getUserMedia({ audio: true, video: false })
             .then(function(stream) {
-                const options = {
-                    sampleRate: 48000,
-                    channelCount: 2,
-                    //mimeType: 'audio/webm;codecs=pcm'
-                    //mimeType: 'audio/webm;codecs=opus'
-                }
-                console.log(stream);
+                const options = { sampleRate: 48000, channelCount: 2 };
                 const mediaRecorder = new window.MediaRecorder(stream, options);
-                
                 startRecording(mediaRecorder);
             })
             .catch(function(err) {
-                    console.log(`The following getUserMedia error occured: ${err}`);
+                    console.log(`The following getUserMedia error occurred: ${err}`);
                 }
             );
 
         async function postData(url = '', data) {
-
             const base64String = btoa(String.fromCharCode.apply(null, new Uint8Array(data)));
 
             const response = await fetch(url, {
                     method: 'POST',
                     mode: 'same-origin',
                     cache: 'no-cache',
-                    headers: {
-                        'Content-Type': 'application/json',
-                       // 'Content-Type': 'audio/webm; codecs=opus',
-                       // 'Content-Type': 'audio/webm; codecs=opus'
-                    },
-                    body: JSON.stringify({
-                        bytes: base64String
-                    })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ bytes: base64String })
                 });
 
-            return await response.json(); // parses JSON response into native JavaScript objects
-        };
-
-     
-
+            return await response.json();
+        }
     </script>
 </body>
 </html>

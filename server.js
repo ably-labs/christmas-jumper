@@ -7,12 +7,9 @@ const app = express();
 
 app.use(express.static("public"));
 app.use(bodyParser.json({limit: '50mb'}));
+
 app.get("/", function(request, response) {
   response.sendFile(__dirname + "/views/index.html");
-});
-
-app.get("/icon.json", function(request, response) {
-  response.sendFile(__dirname + "/views/icon.json");
 });
 
 app.get("/active-image", async (request, response) => {
@@ -22,13 +19,13 @@ app.get("/active-image", async (request, response) => {
 });
 
 app.post("/what-song", async (request, response) => {
-  const base64encodedAudioBytes = request.body.bytes;
-  const byteArray = Buffer.from(base64encodedAudioBytes, 'base64');
+  const byteArray = Buffer.from(request.body.bytes, 'base64');
   const selector = new SongDetector();
   const result = await selector.execute(byteArray);
   response.send(result.body);
 });
 
-const listener = app.listen(process.env.PORT, function() {
+const port = process.env.PORT | 12271;
+const listener = app.listen(port, function() {
   console.log("Your app is listening on port " + listener.address().port);
 });
