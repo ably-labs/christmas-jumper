@@ -13,9 +13,9 @@ class JumperApi {
         return this._mostRecentSong;
     }
 
-    detectSongFromClip(base64byteString) {
+    async detectSongFromClip(base64byteString) {
         const byteArray = Buffer.from(base64byteString, 'base64');
-        this._mostRecentSong = this._songDetector.execute(byteArray);
+        this._mostRecentSong = await this._songDetector.execute(byteArray);
         return this.ok(this._mostRecentSong);
     }
 
