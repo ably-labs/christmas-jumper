@@ -39,6 +39,7 @@ then you can simply run `npm run devserver`
     Your app is listening on port 12271
 
 This will run the server on the same port, with --inspect enabled to connect `VSCode` or `WebStorm` debuggers to step through the code.
+It'll also hot-reload any javascript changes, so you don't have to cycle your node process during dev.
 
 * For VSCode see: https://code.visualstudio.com/docs/nodejs/nodejs-debugging
 * For WebStorm see: https://www.jetbrains.com/help/webstorm/running-and-debugging-node-js.html
