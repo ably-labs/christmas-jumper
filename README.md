@@ -43,6 +43,36 @@ This will run the server on the same port, with --inspect enabled to connect `VS
 * For VSCode see: https://code.visualstudio.com/docs/nodejs/nodejs-debugging
 * For WebStorm see: https://www.jetbrains.com/help/webstorm/running-and-debugging-node-js.html
 
+## Testing
+
+Requires jest. You probably want to
+
+    > npm install -g jest
+
+and restart your terminal for this to work well.
+
+From the command line, run `npm test` (or just `jest`) - to run the entire test suite.
+
+    > npm test
+    
+    > hello-express@0.0.1 test C:\dev\christmas-jumper
+    > jest
+    
+     PASS  commands/SongDetector.test.js (5.092s)
+      Song detector
+        √ Execute returns song title from AudD API call. (2ms)
+        √ Execute calls AudD with API token from configuration
+        √ Execute instructs AudD to download song from azure blob storage
+        √ Integration test: Can detect song that we know about when run against the real AudD API (3952ms)
+    
+    Test Suites: 1 passed, 1 total
+    Tests:       4 passed, 4 total
+    Snapshots:   0 total
+    Time:        5.741s
+    Ran all test suites.
+
+Or use your favourite jest supporting tool.
+
 ## Usage
 
 Just open your browser!
