@@ -19,7 +19,7 @@ class JumperApi {
         return this.ok(this._mostRecentSong);
     }
 
-    getCurrentlyActiveImage() {
+    getActiveImageKey() {
         const result = this._imageSelecctor.execute(this._mostRecentSong);
         return this.ok(result);
     }
