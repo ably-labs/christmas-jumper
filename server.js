@@ -1,27 +1,24 @@
-const ActiveImageSelector = require("./commands/ActiveImageSelector");
-const SongDetector = require("./commands/SongDetector");
-
+const JumperApi = require("./commands/JumperApi");
 const express = require("express");
 const bodyParser = require('body-parser');
-const app = express();
 
+const app = express();
 app.use(express.static("public"));
 app.use(bodyParser.json({limit: '50mb'}));
 
-app.get("/", function(request, response) {
+const jumperApi = new JumperApi();
+
+app.get("/", (request, response) => {
   response.sendFile(__dirname + "/views/index.html");
 });
 
 app.get("/active-image", async (request, response) => {
-  const selector = new ActiveImageSelector();
-  const result = await selector.execute();
+  const result = await jumperApi.getCurrentlyActiveImage();
   response.send(result.body);
 });
 
 app.post("/what-song", async (request, response) => {
-  const byteArray = Buffer.from(request.body.bytes, 'base64');
-  const selector = new SongDetector();
-  const result = await selector.execute(byteArray);
+  const result = await jumperApi.detectSongFromClip(request.body.bytes);
   response.send(result.body);
 });
 

@@ -7,7 +7,7 @@ describe("Song detector", () => {
 
         const result = await sut.execute(new ArrayBuffer(0));
 
-        expect(result.body).toBe("some title");
+        expect(result).toBe("some title");
     });
 
     it("Execute calls AudD with API token from configuration",  async () => {
@@ -33,7 +33,7 @@ describe("Song detector", () => {
 
         const result = await sut.execute(songContents);
 
-        expect(result.body.toLowerCase()).toBe("jingle bell rock");
+        expect(result.toLowerCase()).toBe("jingle bell rock");
     }, 10 * 1000);
 });
 
