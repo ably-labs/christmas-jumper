@@ -5,10 +5,10 @@ const { BlobServiceClient } = require("@azure/storage-blob");
 const uuid = require('uuid/v1');
 
 class SongDetector {
-    constructor(config = cfg, httpClient = axios, azureUploader = uploadToAzureBlobStorage) {
+    constructor(config = cfg, httpClient = axios, uploadAndReturnUrl = uploadToAzureBlobStorage) {
         this._config = config;
         this._httpClient = httpClient;
-        this._upload = azureUploader;
+        this._upload = uploadAndReturnUrl;
     }
 
     async execute(bytes) {
