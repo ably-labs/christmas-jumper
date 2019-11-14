@@ -1,18 +1,8 @@
 const SongDetector = require("./SongDetector");
 
-const fakeConfig = {
-    "azure-account": "some-account",
-    "azure-containerName": "some-container",
-    "azure-blobStorage": `https://some-account.blob.core.windows.net`,
-    "azure-key": "some-azure-key",
-    "audd-token": "some-audd-token"
-};
-
 describe("Song detector", () => {
 
     it("Execute returns song title from AudD API call.",  async () => {
-        const mockAxios = axiosPostSucceeds(auddResponseWithTitle("some title"));
-        const mockAzure = azureUploaderThatReturns("http://some/uploaded/file/location");
         const sut = new SongDetector(fakeConfig, mockAxios, mockAzure);
 
         const result = await sut.execute(new ArrayBuffer(0));
@@ -21,8 +11,6 @@ describe("Song detector", () => {
     });
 
     it("Execute calls AudD with API token from configuration",  async () => {
-        const mockAxios = axiosPostSucceeds();
-        const mockAzure = azureUploaderThatReturns("http://some/uploaded/file/location");
         const sut = new SongDetector(fakeConfig, mockAxios, mockAzure);
 
         await sut.execute(new ArrayBuffer(0));
@@ -31,8 +19,6 @@ describe("Song detector", () => {
     });
 
     it("Execute instructs AudD to download song from azure blob storage",  async () => {
-        const mockAxios = axiosPostSucceeds();
-        const mockAzure = azureUploaderThatReturns("http://some/uploaded/file/location");
         const sut = new SongDetector(fakeConfig, mockAxios, mockAzure);
 
         await sut.execute(new ArrayBuffer(0));
@@ -61,3 +47,13 @@ const axiosPostSucceeds = (responseObject) => ({
         return responseObject;
     }
 });
+
+const mockAxios = axiosPostSucceeds(auddResponseWithTitle("some title"));
+const mockAzure = azureUploaderThatReturns("http://some/uploaded/file/location");
+const fakeConfig = {
+    "azure-account": "some-account",
+    "azure-containerName": "some-container",
+    "azure-blobStorage": `https://some-account.blob.core.windows.net`,
+    "azure-key": "some-azure-key",
+    "audd-token": "some-audd-token"
+};
