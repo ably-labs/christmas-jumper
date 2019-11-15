@@ -24,7 +24,7 @@ const jumperApiSingleton = new JumperApi();
 
 app.get("/active-image", async (request, response) => {
     const result = await jumperApiSingleton.getActiveImageKey();
-    response.send(result);
+    response.send(result.body);
 });
 
 app.post("/what-song", async (request, response) => {

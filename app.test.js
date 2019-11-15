@@ -3,10 +3,10 @@ const app = require("./app");
 
 describe("The App", () => {
 
-    it.skip("Can fetch the most recent image key over a HTTP GET", async () => {
+    it("/active-image defaults to 'default'", async () => {
         const result = await request(app).get('/active-image');
 
         expect(result.statusCode).toBe(200);
-        expect(result.text).toBe("bell");
+        expect(result.text).toBe("default");
     });
 });
