@@ -19,6 +19,7 @@
             window.setTimeout(() => {
                 recorder.stop();
                 console.log("recorder stopped");
+                startRecording(recorder);
             }, 7 * 1000);
         }
 
@@ -26,7 +27,6 @@
             const data = await e.data.arrayBuffer();
             const response = await postData('/what-song', data);
             document.getElementById("song").innerHTML = response.body;
-            startRecording(recorder);
         }
 
         function listen() {
