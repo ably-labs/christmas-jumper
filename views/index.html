@@ -2,10 +2,11 @@
 <html>
 <head>
     <title>What's that song</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <p>Listening for music we know.</p>
-
+    <h1 class="header">Play me a song</h1>
+    <img class="image" src="christmasscene.svg" alt="illustration of jo in a chair next to a fireplace listening to music">
     <script>
         function startRecording(recorder) {
             recorder.ondataavailable = (e) => storeChunks(e, recorder.stream);
