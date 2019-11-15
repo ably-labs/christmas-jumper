@@ -6,7 +6,8 @@
 </head>
 <body>
     <h1 class="header">Play me a song</h1>
-    <img id="not-a-button" class="image" src="christmasscene.svg" alt="illustration of jo in a chair next to a fireplace listening to music">
+    <button class="button" id="button">Start listening</button>
+    <img class="image" src="christmasscene.svg" alt="illustration of jo in a chair next to a fireplace listening to music">
     <h2 id="song" class="song"></h2>
     
     <script>
@@ -55,7 +56,7 @@
             return await response.json();
         }
 
-        document.getElementById("not-a-button").onclick = listen;
+        document.getElementById("button").onclick = listen;
     </script>
 </body>
 </html>

@@ -3,25 +3,39 @@
 }
 
 body {
-  font-family: helvetica, arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  height: 100vh;
   margin: 0;
   padding: 0;
+  font-family: helvetica, arial, sans-serif;
   background-color: #9ad0d7;
-  height: 100vh;
 }
 
 h1 {
-  text-align: center;
   margin: 0;
-  padding: 10vh 0 0;
+  padding: 10vh 0;
+  text-align: center;
   font-size: 6vw;
+}
+
+button {
+  max-width: 200px;
+  padding: 20px;
+  border: 0;
+  border-radius: 30px;
+  cursor: pointer;
+  font-size: 24px;
+  background-color: white;
+}
+
+button:hover {
+  background-color: green;
 }
 
 .image {
   display: block;
   max-width: 900px;
-  position: absolute;
-  left: 50%;
-  transform: translate(-50%, 0);
-  bottom: 0;
 }
