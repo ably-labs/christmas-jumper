@@ -24,12 +24,12 @@ const jumperApiSingleton = new JumperApi();
 
 app.get("/active-image", async (request, response) => {
     const result = await jumperApiSingleton.getActiveImageKey();
-    response.send(result.body);
+    response.send(result);
 });
 
 app.post("/what-song", async (request, response) => {
     const result = await jumperApiSingleton.detectSongFromClip(request.body.bytes);
-    response.send(result.body);
+    response.send(result);
 });
 
 module.exports = app;

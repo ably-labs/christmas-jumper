@@ -6,7 +6,7 @@
 </head>
 <body>
     <h1 class="header">Play me a song</h1>
-    <img class="image" src="christmasscene.svg" alt="illustration of jo in a chair next to a fireplace listening to music">
+    <img id="not-a-button" class="image" src="christmasscene.svg" alt="illustration of jo in a chair next to a fireplace listening to music">
     <script>
         function startRecording(recorder) {
             recorder.ondataavailable = (e) => storeChunks(e, recorder.stream);
@@ -16,7 +16,7 @@
             window.setTimeout(() => {
                 recorder.stop();
                 console.log("recorder stopped");
-                // startRecording(recorder);
+                startRecording(recorder);
             }, 15 * 1000);
         }
 
@@ -26,16 +26,18 @@
             console.log(response);
         }
 
-        navigator.mediaDevices.getUserMedia({ audio: true, video: false })
-            .then(function(stream) {
-                const options = { sampleRate: 48000, channelCount: 2 };
-                const mediaRecorder = new window.MediaRecorder(stream, options);
-                startRecording(mediaRecorder);
-            })
-            .catch(function(err) {
-                    console.log(`The following getUserMedia error occurred: ${err}`);
-                }
-            );
+        function listen() {
+            navigator.mediaDevices.getUserMedia({audio: true, video: false})
+                .then(function (stream) {
+                    const options = {sampleRate: 48000, channelCount: 2};
+                    const mediaRecorder = new window.MediaRecorder(stream, options);
+                    startRecording(mediaRecorder);
+                })
+                .catch(function (err) {
+                        console.log(`The following getUserMedia error occurred: ${err}`);
+                    }
+                );
+        }
 
         async function postData(url = '', data) {
             const base64String = btoa(String.fromCharCode.apply(null, new Uint8Array(data)));
@@ -50,6 +52,8 @@
 
             return await response.json();
         }
+
+        document.getElementById("not-a-button").onclick = listen;
     </script>
 </body>
 </html>
