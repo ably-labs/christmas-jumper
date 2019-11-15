@@ -20,6 +20,16 @@ describe("MusicToImageMapper", async () => {
 
         expect(result.body).toBe("some song");
     });
+    
+    it("detectActiveSong when the song detector doesn't know a song, returns previous most recent",  async () => {
+        const songDetector = { "execute": () => { return { "unrecognised": true } } };
+        const sut = new JumperApi(songDetector);
+
+        const result = await sut.detectSongFromClip("base64-encoded-bytes-from-browser");
+
+        console.log(result.body);
+        expect(result.body).toBe("default");
+    });
 
     it("detectActiveSong converts raw bytes correctly when detecting songs",  async () => {
         const bytesToMatch = [ 1, 2, 3, 4, 5 ];
