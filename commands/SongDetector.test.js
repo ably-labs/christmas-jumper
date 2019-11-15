@@ -27,7 +27,7 @@ describe("Song detector", () => {
         expect(parts).toBe("http://some/uploaded/file/location");
     });
 
-    it("Integration test: Can detect song that we know about when run against the real AudD API",  async () => {
+    it.skip("Integration test: Can detect song that we know about when run against the real AudD API",  async () => {
         const sut = new SongDetector();
         const songContents = await require("fs").readFileSync("./test-data/02 - Jingle Bell Rock.mp3");
 
