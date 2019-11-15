@@ -13,7 +13,7 @@ describe("MusicToImageMapper", () => {
     });
 
     it("detectActiveSong converts raw bytes correctly when detecting songs",  async () => {
-        const bytesToMatch = [1,2,3,4,5];
+        const bytesToMatch = [ 1, 2, 3, 4, 5 ];
         const inBase64 = Buffer.from(bytesToMatch).toString("base64");
         const songDetector = { "execute": (bytes) => {
                 return JSON.stringify([...bytes]) === JSON.stringify(bytesToMatch) ? "matched" : "wrong bytes";
