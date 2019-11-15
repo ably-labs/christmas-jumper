@@ -7,23 +7,26 @@
 <body>
     <h1 class="header">Play me a song</h1>
     <img id="not-a-button" class="image" src="christmasscene.svg" alt="illustration of jo in a chair next to a fireplace listening to music">
+    <h2 id="song" class="song"></h2>
+    
+    
     <script>
         function startRecording(recorder) {
-            recorder.ondataavailable = (e) => storeChunks(e, recorder.stream);
+            recorder.ondataavailable = (e) => storeChunks(e, recorder);
             recorder.start();
             console.log(recorder.state);
             console.log("recorder started");
             window.setTimeout(() => {
                 recorder.stop();
                 console.log("recorder stopped");
-                startRecording(recorder);
-            }, 15 * 1000);
+            }, 7 * 1000);
         }
 
-        async function storeChunks(e, stream) {
+        async function storeChunks(e, recorder) {
             const data = await e.data.arrayBuffer();
             const response = await postData('/what-song', data);
-            console.log(response);
+            document.getElementById("song").innerHTML = response.body;
+            startRecording(recorder);
         }
 
         function listen() {

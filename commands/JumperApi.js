@@ -15,7 +15,12 @@ class JumperApi {
 
     async detectSongFromClip(base64byteString) {
         const byteArray = Buffer.from(base64byteString, 'base64');
-        this._mostRecentSong = await this._songDetector.execute(byteArray);
+        const returned = await this._songDetector.execute(byteArray);
+
+        if(!returned.hasOwnProperty("unrecognised")) {
+            this._mostRecentSong = returned;
+        }
+
         return this.ok(this._mostRecentSong);
     }
 

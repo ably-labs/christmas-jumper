@@ -35,6 +35,19 @@ describe("Song detector", () => {
 
         expect(result.toLowerCase()).toBe("jingle bell rock");
     }, 10 * 1000);
+
+    
+    it.skip("Integration test: Can detect multiple songs in sequence",  async () => {
+        const sut = new SongDetector();
+        const songContents1 = await require("fs").readFileSync("./test-data/01 - Rockin' Around The Christmas Tree.mp3");
+        const songContents2 = await require("fs").readFileSync("./test-data/02 - Jingle Bell Rock.mp3");
+
+        const result1 = await sut.execute(songContents1);
+        const result2 = await sut.execute(songContents2);
+
+        expect(result1.toLowerCase()).toBe("rockin' around the christmas tree");
+        expect(result2.toLowerCase()).toBe("jingle bell rock");
+    }, 10 * 1000);
 });
 
 const azureUploaderThatReturns = (url) => () => url;
