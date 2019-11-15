@@ -27,8 +27,7 @@ describe("MusicToImageMapper", async () => {
 
         const result = await sut.detectSongFromClip("base64-encoded-bytes-from-browser");
 
-        console.log(result.body);
-        expect(result.body).toBe("default");
+        expect(result.body).toBe("");
     });
 
     it("detectActiveSong converts raw bytes correctly when detecting songs",  async () => {
