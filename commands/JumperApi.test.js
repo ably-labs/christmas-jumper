@@ -1,7 +1,16 @@
 const uuid = require('uuid/v1');
 const JumperApi = require("./JumperApi");
 
-describe("MusicToImageMapper", () => {
+describe("MusicToImageMapper", async () => {
+
+    it("getActiveImageKey returns 'default' when no music has been heard at all.",  async () => {
+        const songDetector = { "execute": () => "some song" };
+        const sut = new JumperApi(songDetector);
+
+        const result = await sut.getActiveImageKey();
+
+        expect(result.body).toBe("default");
+    });
 
     it("detectActiveSong calls the song detector to identify music",  async () => {
         const songDetector = { "execute": () => "some song" };
