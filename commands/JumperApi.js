@@ -34,8 +34,8 @@ class JumperApi {
         return this.ok(result);
     }
 
-    getActiveImageFrames() {
-        const result = this._imageSelecctor.getFrames(this.mostRecentSong());
+    async getActiveImageFrames() {
+        const result = await this._imageSelecctor.getFrames(this.mostRecentSong());
         return this.ok(result);
     }
 

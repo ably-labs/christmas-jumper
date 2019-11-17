@@ -36,12 +36,35 @@ class ActiveImageSelector {
 
     async getFrames(mostRecentSong) {
         const imageKey = this.execute(mostRecentSong);
+        return await this.getFramesForKey(imageKey);
+    }
+
+    async getFramesForKey(imageKey) {
         const result = {
-            frames: [],
-            snaked: this._snakeFrames
+            imageKey: imageKey,
+            snaked: this._snakeFrames,
+            rgbFrames: []
         };
 
-        const image = await jimp.read("./images/" + imageKey + ".png");
+        const frameImages = [];
+        const singleFrameFilename = `${imageKey}.png`;
+
+        if(fs.existsSync(`./images/${singleFrameFilename}`)){
+            frameImages.push(singleFrameFilename);
+        } else {
+            frameImages.push(...fs.readdirSync("./images/").filter(f => f.startsWith(`${imageKey}_`)));
+        }
+
+        for(let match of frameImages) {
+            const image = await jimp.read(`./images/${match}`);
+            const frame = this.getSingleFrameFrom(image);
+            result.rgbFrames.push(frame.flat());
+        }
+
+        return result;
+    }
+
+    getSingleFrameFrom(image) {
         const rows = [];
         for (let y = 0; y < image.bitmap.height; y++) {
 
@@ -52,7 +75,7 @@ class ActiveImageSelector {
                 const pixel = jimp.intToRGBA(hex);
 
                 row.push(
-                    [ pixel.r, pixel.g, pixel.b ]
+                    [pixel.r, pixel.g, pixel.b]
                 );
             }
 
@@ -62,10 +85,7 @@ class ActiveImageSelector {
 
             rows.push(row);
         }
-
-        result.frames.push(rows.flat());
-
-        return result;
+        return rows;
     }
 }
 

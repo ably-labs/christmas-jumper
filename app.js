@@ -27,6 +27,15 @@ app.get("/active-image", async (request, response) => {
     response.send(result.body);
 });
 
+app.get("/active-image-frames", async (request, response) => {
+    // TODO: Support etags / IfModifiedSince
+    //       This will stop us pushing too much data all the time.
+    //       If the image hasn't changed since last time, don't re-download it, just return not modified.
+    //       This will allow the hardware to play multi-frame animations without having them perma-streaming.
+    const result = await jumperApiSingleton.getActiveImageFrames();
+    response.send(result.body);
+});
+
 app.post("/what-song", async (request, response) => {
     const result = await jumperApiSingleton.detectSongFromClip(request.body.bytes);
     response.send(result);
