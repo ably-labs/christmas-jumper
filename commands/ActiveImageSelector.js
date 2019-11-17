@@ -1,3 +1,6 @@
+const fs = require("fs");
+const jimp = require("jimp");
+
 class ActiveImageSelector {
     constructor(snakeFrames = true) {
         this._snakeFrames = snakeFrames;
@@ -31,9 +34,38 @@ class ActiveImageSelector {
         return map[cleaned];
     }
 
-    getFrames(mostRecentSong) {
+    async getFrames(mostRecentSong) {
         const imageKey = this.execute(mostRecentSong);
-//
+        const result = {
+            frames: [],
+            snaked: this._snakeFrames
+        };
+
+        const image = await jimp.read("./images/" + imageKey + ".png");
+        const rows = [];
+        for (let y = 0; y < image.bitmap.height; y++) {
+
+            let row = [];
+
+            for (let x = 0; x < image.bitmap.width; x++) {
+                const hex = image.getPixelColor(x, y);
+                const pixel = jimp.intToRGBA(hex);
+
+                row.push(
+                    [ pixel.r, pixel.g, pixel.b ]
+                );
+            }
+
+            if (this._snakeFrames && (y % 2 != 0)) {
+                row = row.reverse();
+            }
+
+            rows.push(row);
+        }
+
+        result.frames.push(rows.flat());
+
+        return result;
     }
 }
 
