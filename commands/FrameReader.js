@@ -7,41 +7,47 @@ class FrameReader {
     }
 
     async execute(imageKey) {
-        const result = {
-            imageKey: imageKey,
-            snaked: this._snakeFrames,
-            rgbFrames: []
-        };
+        const rgbFrames = [];
+        const frameImages = this.findFramesFor(imageKey);
 
-        const frameImages = [];
-        const singleFrameFilename = `${imageKey}.png`;
+        for(let frame of frameImages) {
+            const png = await jimp.read(`./images/${frame}`);
+            const duration = this.establishFrameDuration(frame);
+            const frameAsBytes = this.getSingleFrameFrom(png);
 
-        if(fs.existsSync(`./images/${singleFrameFilename}`)){
-            frameImages.push(singleFrameFilename);
-        } else {
-            frameImages.push(...fs.readdirSync("./images/").filter(f => f.startsWith(`${imageKey}_`)));
-        }
-
-        for(let match of frameImages) {
-            const image = await jimp.read(`./images/${match}`);
-
-            let duration = -1;
-            const frameParts = match.split('_');
-            if(frameParts.length > 1) {
-                const indexAndDuration = frameParts[1].replace(/.png/g, "");
-                const indexAndDurationParts = indexAndDuration.split('-');
-                duration = indexAndDurationParts.length === 2 ? parseInt(indexAndDurationParts[1]) : 10 * 1000;
-            }
-
-            const frame = this.getSingleFrameFrom(image);
-
-            result.rgbFrames.push({
-                data: frame.flat(),
+            rgbFrames.push({
+                data: frameAsBytes.flat(),
                 duration: duration
             });
         }
 
-        return result;
+        return {
+            imageKey: imageKey,
+            snaked: this._snakeFrames,
+            frameCount: rgbFrames.length,
+            rgbFrames: rgbFrames
+        };
+    }
+
+    findFramesFor(imageKey) {
+        const singleFrameFilename = `${imageKey}.png`;
+        if (fs.existsSync(`./images/${singleFrameFilename}`)) {
+            return [singleFrameFilename];
+        }
+
+        const frameFiles = fs.readdirSync("./images/").filter(f => f.startsWith(`${imageKey}_`));
+        return  [...frameFiles];
+    }
+
+    establishFrameDuration(match) {
+        const frameParts = match.split('_');
+        if (frameParts.length <= 1) {
+            return -1;
+        }
+
+        const indexAndDuration = frameParts[1].replace(/.png/g, "");
+        const indexAndDurationParts = indexAndDuration.split('-');
+        return indexAndDurationParts.length === 2 ? parseInt(indexAndDurationParts[1]) : 10 * 1000;
     }
 
     getSingleFrameFrom(image) {
