@@ -1,7 +1,7 @@
 const uuid = require('uuid/v1');
 const JumperApi = require("./JumperApi");
 
-describe("MusicToImageMapper", async () => {
+describe("MusicToImageMapper", () => {
 
     it("getActiveImageKey returns 'default' when no music has been heard at all.",  async () => {
         const songDetector = { "execute": () => "some song" };
@@ -64,5 +64,20 @@ describe("MusicToImageMapper", async () => {
         const result = await sut.getActiveImageKey();
 
         expect(result.body).toBe(`key-for-${randomSongReturned}`);
+    });
+
+    it("getActiveImageFrames asks the image streamer for an image based on the most recent song detected.",  async () => {
+        const randomSongReturned = uuid();
+        const songDetector = { "execute": () => randomSongReturned };
+        const imageSelector = { "getFrames": (passedSong) => ({
+            "frames": [passedSong]
+        })};
+
+        const sut = new JumperApi(songDetector, imageSelector);
+
+        await sut.detectSongFromClip("base64-encoded-bytes-from-browser");
+        const result = await sut.getActiveImageFrames();
+
+        expect(result.body["frames"][0]).toBe(randomSongReturned);
     });
 });

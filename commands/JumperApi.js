@@ -10,6 +10,10 @@ class JumperApi {
     }
 
     mostRecentSong() {
+        if(this._mostRecentSong === "") {
+            return "default";
+        }
+
         return this._mostRecentSong;
     }
 
@@ -26,11 +30,12 @@ class JumperApi {
     }
 
     getActiveImageKey() {
-        if(this._mostRecentSong === "") {
-            return this.ok("default");
-        }
+        const result = this._imageSelecctor.execute(this.mostRecentSong());
+        return this.ok(result);
+    }
 
-        const result = this._imageSelecctor.execute(this._mostRecentSong);
+    getActiveImageFrames() {
+        const result = this._imageSelecctor.getFrames(this.mostRecentSong());
         return this.ok(result);
     }
 

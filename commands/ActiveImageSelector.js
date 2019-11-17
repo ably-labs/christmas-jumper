@@ -1,8 +1,13 @@
 class ActiveImageSelector {
-    constructor() {
+    constructor(snakeFrames = true) {
+        this._snakeFrames = snakeFrames;
     }
 
     execute(mostRecentSong) {
+        if(mostRecentSong === "default") {
+            return "default";
+        }
+
         const cleaned = mostRecentSong.toLowerCase();
         const map = {
             "jingle bell rock": "bell",
@@ -24,6 +29,11 @@ class ActiveImageSelector {
         };
 
         return map[cleaned];
+    }
+
+    getFrames(mostRecentSong) {
+        const imageKey = this.execute(mostRecentSong);
+//
     }
 }
 
