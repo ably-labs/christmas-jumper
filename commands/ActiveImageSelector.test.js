@@ -1,6 +1,5 @@
 const each = require('jest-each').default;
 const ActiveImageSelector = require("./ActiveImageSelector");
-const jimp = require('jimp');
 
 const sut = new ActiveImageSelector();
 
