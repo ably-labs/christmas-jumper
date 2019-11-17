@@ -37,8 +37,8 @@ class JumperApi {
     }
 
     async getActiveImageFrames() {
-        const mostRecentSongKey = await this._imageSelecctor.execute(this.mostRecentSong());
-        const result = await this._frameReader.execute(mostRecentSongKey);
+        const activeImageKey = await this._imageSelecctor.execute(this.mostRecentSong());
+        const result = await this._frameReader.execute(activeImageKey);
         return this.ok(result);
     }
 
