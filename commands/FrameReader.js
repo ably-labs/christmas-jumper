@@ -24,8 +24,21 @@ class FrameReader {
 
         for(let match of frameImages) {
             const image = await jimp.read(`./images/${match}`);
+
+            let duration = -1;
+            const frameParts = match.split('_');
+            if(frameParts.length > 1) {
+                const indexAndDuration = frameParts[1].replace(/.png/g, "");
+                const indexAndDurationParts = indexAndDuration.split('-');
+                duration = indexAndDurationParts.length === 2 ? parseInt(indexAndDurationParts[1]) : 10 * 1000;
+            }
+
             const frame = this.getSingleFrameFrom(image);
-            result.rgbFrames.push(frame.flat());
+
+            result.rgbFrames.push({
+                data: frame.flat(),
+                duration: duration
+            });
         }
 
         return result;
