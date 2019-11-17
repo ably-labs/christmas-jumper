@@ -1,12 +1,14 @@
 const ActiveImageSelector = require("./ActiveImageSelector");
 const SongDetector = require("./SongDetector");
+const FrameReader = require("./FrameReader");
 
 class JumperApi {
 
-    constructor(songDetector, imageSelector) {
+    constructor(songDetector, imageSelector, frameReader) {
         this._mostRecentSong = "";
         this._songDetector = songDetector || new SongDetector();
         this._imageSelecctor = imageSelector || new ActiveImageSelector();
+        this._frameReader = frameReader || new FrameReader();
     }
 
     mostRecentSong() {
@@ -35,7 +37,8 @@ class JumperApi {
     }
 
     async getActiveImageFrames() {
-        const result = await this._imageSelecctor.getFrames(this.mostRecentSong());
+        const mostRecentSongKey = await this._imageSelecctor.execute(this.mostRecentSong());
+        const result = await this._frameReader.execute(mostRecentSongKey);
         return this.ok(result);
     }
 

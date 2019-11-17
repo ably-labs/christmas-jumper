@@ -66,14 +66,15 @@ describe("MusicToImageMapper", () => {
         expect(result.body).toBe(`key-for-${randomSongReturned}`);
     });
 
-    it("getActiveImageFrames asks the image streamer for an image based on the most recent song detected.",  async () => {
+    it("getActiveImageFrames asks the frame reader for an image based on the most recent song detected.",  async () => {
         const randomSongReturned = uuid();
         const songDetector = { "execute": () => randomSongReturned };
-        const imageSelector = { "getFrames": (passedSong) => ({
-            "frames": [passedSong]
+        const imageSelector = { "execute": (passedSong) => (`${passedSong}`) };
+        const frameReader = { "execute": (passedKey) => ({
+            "frames": [passedKey]
         })};
 
-        const sut = new JumperApi(songDetector, imageSelector);
+        const sut = new JumperApi(songDetector, imageSelector, frameReader);
 
         await sut.detectSongFromClip("base64-encoded-bytes-from-browser");
         const result = await sut.getActiveImageFrames();
