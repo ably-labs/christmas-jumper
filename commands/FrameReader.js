@@ -15,8 +15,19 @@ class FrameReader {
             const duration = this.establishFrameDuration(frame);
             const frameAsBytes = this.getSingleFrameFrom(png);
 
+            let flattened = frameAsBytes.flat();
+            
+            // Dodgy optimisations - if the pixel colour hasn't changed
+            // replace it with an empty element to save space.
+            for(let i = flattened.length -1; i > 0; i--) {
+                const precursor = flattened[i - 1];
+                if (flattened[i] == precursor) {
+                    flattened[i] = "";
+                }
+            }
+
             rgbFrames.push({
-                data: frameAsBytes.flat(),
+                data: flattened,
                 duration: duration
             });
         }
@@ -59,10 +70,17 @@ class FrameReader {
             for (let x = 0; x < image.bitmap.width; x++) {
                 const hex = image.getPixelColor(x, y);
                 const pixel = jimp.intToRGBA(hex);
+                let hexCode = fullColorHex(pixel.r, pixel.g, pixel.b);
 
-                row.push(
-                    [pixel.r, pixel.g, pixel.b]
-                );
+                if(hexCode === "000000") {
+                    hexCode = "x"
+                }
+
+                if(hexCode === "ffffff") {
+                    hexCode = "w"
+                }
+
+                row.push(hexCode);
             }
 
             if (this._snakeFrames && (y % 2 != 0)) {
@@ -71,8 +89,24 @@ class FrameReader {
 
             rows.push(row);
         }
+
         return rows;
     }
+}
+
+var rgbToHex = function (rgb) { 
+    var hex = Number(rgb).toString(16);
+    if (hex.length < 2) {
+         hex = "0" + hex;
+    }
+    return hex;
+};
+
+var fullColorHex = function(r,g,b) {   
+    var red = rgbToHex(r);
+    var green = rgbToHex(g);
+    var blue = rgbToHex(b);
+    return red+green+blue;
 }
 
 module.exports = FrameReader;

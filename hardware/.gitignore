@@ -1,0 +1,6 @@
+/.vs
+/JumperFirmware/Debug
+/JumperFirmware/*.user
+/JumperFirmware/__vm
+/*.DotSettings
+/*.v3.ncrunch*
