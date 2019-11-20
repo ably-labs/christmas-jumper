@@ -1,4 +1,5 @@
 const cfg = require('../config');
+const os = require('os');
 const axios = require("axios");
 const { StorageSharedKeyCredential } = require("@azure/storage-blob");
 const { BlobServiceClient } = require("@azure/storage-blob");
@@ -34,8 +35,8 @@ const uploadToAzureBlobStorage = async (config, bytes) => {
     const blobServiceClient = new BlobServiceClient(config["azure-blobStorage"], defaultAzureCredential);
     const containerClient = blobServiceClient.getContainerClient(config["azure-containerName"]);
 
-    // Generate unique filename and upload
-    const unique = "latestSongUpload" //uuid();
+    // Generate unique filename and upload    
+    const unique = os.hostname() + "latestSongUpload" //uuid();
     const blockBlobClient = containerClient.getBlockBlobClient(unique);
     const uploadBlobResponse = await blockBlobClient.upload(bytes, bytes.length || 0);
 

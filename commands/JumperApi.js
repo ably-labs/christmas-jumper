@@ -36,9 +36,23 @@ class JumperApi {
         return this.ok(result);
     }
 
-    async getActiveImageFrames() {
+    async getActiveImageFrame(clientCurrentImageKey, clientCurrentFrameIndex) {
         const activeImageKey = await this._imageSelecctor.execute(this.mostRecentSong());
-        const result = await this._frameReader.execute(activeImageKey);
+        const allFrames = await this._frameReader.execute(activeImageKey);
+
+        let frameIndex = 0;
+        if(clientCurrentImageKey == allFrames.imageKey && allFrames.frames.length > 1) {
+            frameIndex = (clientCurrentFrameIndex + 1) >= allFrames.frames.length ? 0 : clientCurrentFrameIndex + 1;
+        }
+
+        const result = {
+            imageKey: allFrames.imageKey,
+            frameCount: allFrames.frames.length,
+            frameIndex: frameIndex,
+            frame: allFrames.frames[frameIndex],
+            palette: allFrames.palette,
+        };
+
         return this.ok(result);
     }
 

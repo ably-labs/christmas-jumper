@@ -7,7 +7,7 @@ class FrameReader {
     }
 
     async execute(imageKey) {
-        const rgbFrames = [];
+        const frames = [];
         const frameImages = this.findFramesFor(imageKey);
 
         for(let frame of frameImages) {
@@ -16,18 +16,18 @@ class FrameReader {
             const frameAsBytes = this.getSingleFrameFrom(png);
             let flattened = frameAsBytes.flat();
 
-            rgbFrames.push({
+            frames.push({
                 b: flattened,
                 duration: duration
             });
         }
 
-        const palette = this.paletteise(rgbFrames);
+        const palette = this.paletteise(frames);
 
         return {
             imageKey: imageKey,
             snaked: this._snakeFrames,
-            rgbFrames: rgbFrames,
+            frames: frames,
             palette: palette
         };
     }
@@ -81,15 +81,6 @@ class FrameReader {
                 const hex = image.getPixelColor(x, y);
                 const pixel = jimp.intToRGBA(hex);
                 let hexCode = fullColorHex(pixel.r, pixel.g, pixel.b);
-
-                /*if(hexCode === "000000") {
-                    hexCode = "x"
-                }
-
-                if(hexCode === "ffffff") {
-                    hexCode = "w"
-                }*/
-
                 row.push(hexCode);
             }
 

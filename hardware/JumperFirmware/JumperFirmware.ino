@@ -1,4 +1,3 @@
-#include <ArduinoJson.hpp>
 #include <ArduinoJson.h>
 #include <Adafruit_NeoPixel.h>
 
@@ -38,6 +37,8 @@ auto ensure_wifi_connected(const char* ssid, const char* password) -> void
 
 auto http_get(String urlToReq) -> String
 {
+	Serial.println("Requesting: " + urlToReq);
+	
 	const auto index_of_protocol = urlToReq.indexOf("://") + 3;
 	const auto without_protocol = urlToReq.substring(index_of_protocol);
 	const auto index_of_port = without_protocol.indexOf(":");
@@ -60,10 +61,15 @@ auto http_get(String urlToReq) -> String
 	String response;
 	while (client.available()) { response = client.readString(); }
 
+	Serial.println("Request read response.");
+	
 	const String delimiter = "\r\n\r\n";
 	const auto index_of_close = response.lastIndexOf(delimiter);
 	auto body = response.substring(index_of_close + delimiter.length());
 	body.trim();
+
+	Serial.println("Request completed, returned:");
+	Serial.println(body);
 
 	return body;
 }
@@ -74,12 +80,12 @@ auto error_lights() -> void
 	for (auto i = 1; i < NUM_LIGHTS; i++) { strip.setPixelColor(i, strip.Color(0, 0, 0)); }
 }
 
-auto update_lights(const DynamicJsonDocument& doc, int frame) -> void
+auto update_lights(const DynamicJsonDocument& doc) -> void
 {
 	Serial.println("Updating lights");
 
 	for (auto i = 0; i < NUM_LIGHTS; i++) {
-		auto image_frame = doc["rgbFrames"][frame]["b"];
+		auto image_frame = doc["frame"]["b"];
 		const auto palette_ref = image_frame[i].as<int>();
 		const auto hex_code = doc["palette"][palette_ref].as<const char*>();
 				
@@ -106,69 +112,47 @@ auto setup() -> void
 
 typedef struct
 {
-	char* image_key;
+	String image_key;
 	int frame_index;
 	int frame_duration;
 } image_identity;
 
-bool are_equal(const char* first, const char* second) {	return strcmp(first, second) == 0; }
-
 const int default_delay = 1000;
-int current_delay = default_delay;
-image_identity current_image = { "", -1, default_delay };
-
+image_identity current_image = { "_", -1, default_delay };
 
 auto loop() -> void
 {
-	Serial.println("Tick");
-
 	ensure_wifi_connected(ssid, password);
 
-	const auto json = http_get("http://192.168.1.75:12271/active-image-frames");
+	auto api_path = "http://192.168.1.75:12271/active-image-frames?currentImageKey=";
+	auto url_to_req = api_path + current_image.image_key + "&currentFrameIndex=" + current_image.frame_index;
+	const auto json = http_get(url_to_req);
 	if (json.equals("")) {
-		delay(current_delay);
+		delay(default_delay);
 		return;
 	}
-
-	Serial.println(json);
-	DynamicJsonDocument doc(20000); // This will support ~10 frames
+	
+	DynamicJsonDocument doc(20000);
 	const DeserializationError error = deserializeJson(doc, json);
 	if (error) {
-		delay(current_delay);
+		delay(default_delay);
 		return;
 	}
 
-	char* this_image_key = doc["imageKey"];
-	auto total_frames = doc["rgbFrames"].size();
+	const auto total_frames = doc["frameCount"].as<int>();
+	const auto image_key = doc["imageKey"].as<String>();
+	const auto frame_index = doc["frameIndex"].as<int>();
+	const auto frame_display_duration = doc["frame"]["duration"].as<int>();
 
-	if (are_equal(current_image.image_key, this_image_key) == 0 && total_frames > 1)
-	{	
-		Serial.println("Image is part of an animation, stepping forwards");
-		current_image.frame_index = total_frames > 1 ? current_image.frame_index + 1 : current_image.frame_index;
-		current_image.frame_index = current_image.frame_index >= total_frames ? 0 : current_image.frame_index;
-		current_image.frame_duration = doc["rgbFrames"][current_image.frame_index]["duration"].as<int>();				
-	}
-	else
-	{
-		Serial.println("Image has changed");
-		current_image.image_key = this_image_key;
-		current_image.frame_index = 0;
-		current_image.frame_duration = default_delay;
-	}
-	   
-	const auto frame_to_show = current_image.frame_index == -1 ? 0 : current_image.frame_index;
-	const auto show_duration = current_image.frame_duration == -1 ? default_delay : current_image.frame_duration;
-
-	Serial.print("Displaying ");
-	Serial.print(current_image.image_key);
-	Serial.print(" at frame ");
-	Serial.print(current_image.frame_index);
-	Serial.print(" wth a delay of ");
-	Serial.print(current_image.frame_duration);
-	Serial.println();
+	current_image.image_key = image_key;
+	current_image.frame_index = frame_index;
+	current_image.frame_duration = total_frames == 1 ? default_delay : frame_display_duration;
 	
-	update_lights(doc, frame_to_show);
+	Serial.println("Displaying " + image_key + " at frame " + current_image.frame_index + " wth a delay of " + current_image.frame_duration);
+	
+	update_lights(doc);
 	strip.show();
 
-	delay(show_duration);
+	delay(current_image.frame_duration);
+	Serial.println("Looping...");
 }

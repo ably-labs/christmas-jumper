@@ -77,8 +77,8 @@ describe("MusicToImageMapper", () => {
         const sut = new JumperApi(songDetector, imageSelector, frameReader);
 
         await sut.detectSongFromClip("base64-encoded-bytes-from-browser");
-        const result = await sut.getActiveImageFrames();
+        const result = await sut.getActiveImageFrame("default", 0);
 
-        expect(result.body["frames"][0]).toBe(randomSongReturned);
+        expect(result.body["frame"]).toBe(randomSongReturned);
     });
 });

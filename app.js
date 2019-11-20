@@ -33,7 +33,7 @@ app.get("/active-image-frames", async (request, response) => {
     //       If the image hasn't changed since last time, don't re-download it, just return not modified.
     //       This will allow the hardware to play multi-frame animations without having them perma-streaming.
     //       Consuming code has to understand unpacking json for this to work.
-    const result = await jumperApiSingleton.getActiveImageFrames();
+    const result = await jumperApiSingleton.getActiveImageFrame(request.query.currentImageKey, parseInt(request.query.currentFrameIndex));
     response.send(result.body);
 });
 
