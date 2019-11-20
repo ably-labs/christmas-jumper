@@ -66,7 +66,7 @@ describe("MusicToImageMapper", () => {
         expect(result.body).toBe(`key-for-${randomSongReturned}`);
     });
 
-    it("getActiveImageFrames asks the frame reader for an image based on the most recent song detected.",  async () => {
+    it("getActiveImageFrame asks the frame reader for an image based on the most recent song detected.",  async () => {
         const randomSongReturned = uuid();
         const songDetector = { "execute": () => randomSongReturned };
         const imageSelector = { "execute": (passedSong) => (`${passedSong}`) };
@@ -80,5 +80,43 @@ describe("MusicToImageMapper", () => {
         const result = await sut.getActiveImageFrame("default", 0);
 
         expect(result.body["frame"]).toBe(randomSongReturned);
+    });
+
+    it("getActiveImageFrame returns next frame when image is part of an animation",  async () => {
+        const songDetector = { "execute": () => "default" };
+        const imageSelector = { "execute": (passedSong) => passedSong };
+        const frameReader = { "execute": (passedKey) => ({
+            "imageKey": "some-animation",
+            "frames": [
+                {b:[1]},
+                {b:[2]}
+            ]
+        })};
+
+        const sut = new JumperApi(songDetector, imageSelector, frameReader);
+        await sut.detectSongFromClip("base64-encoded-bytes-from-browser");
+
+        const result = await sut.getActiveImageFrame("some-animation", 0);
+
+        expect(result.body["frame"].b[0]).toBe(2); // recieved second array element
+    });
+
+    it("getActiveImageFrame returns first frame when image is part of an animation and currently showing final frame",  async () => {
+        const songDetector = { "execute": () => "default" };
+        const imageSelector = { "execute": (passedSong) => passedSong };
+        const frameReader = { "execute": (passedKey) => ({
+            "imageKey": "some-animation",
+            "frames": [
+                {b:[1]},
+                {b:[2]}
+            ]
+        })};
+
+        const sut = new JumperApi(songDetector, imageSelector, frameReader);
+        await sut.detectSongFromClip("base64-encoded-bytes-from-browser");
+
+        const result = await sut.getActiveImageFrame("some-animation", 1);
+
+        expect(result.body["frame"].b[0]).toBe(1); // recieved first array element
     });
 });

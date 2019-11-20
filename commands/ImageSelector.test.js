@@ -1,7 +1,7 @@
 const each = require('jest-each').default;
-const ActiveImageSelector = require("./ActiveImageSelector");
+const ImageSelector = require("./ImageSelector");
 
-const sut = new ActiveImageSelector();
+const sut = new ImageSelector();
 
 describe("ActiveImageSelector", () => {
 

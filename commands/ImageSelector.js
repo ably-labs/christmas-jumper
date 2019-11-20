@@ -1,8 +1,8 @@
-class ActiveImageSelector {
+class ImageSelector {
     execute(mostRecentSong) {
         const cleaned = mostRecentSong.toLowerCase();
         const map = {
-            "default": "frametest",
+            "default": "default",
             "jingle bell rock": "bell",
             "let it snow! let it snow! let it snow!": "snow",
             "rockin' around the christmas tree": "tree",
@@ -25,4 +25,4 @@ class ActiveImageSelector {
     }
 }
 
-module.exports = ActiveImageSelector;
+module.exports = ImageSelector;

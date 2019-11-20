@@ -1,4 +1,4 @@
-const ActiveImageSelector = require("./ActiveImageSelector");
+const ImageSelector = require("./ImageSelector");
 const SongDetector = require("./SongDetector");
 const FrameReader = require("./FrameReader");
 
@@ -7,7 +7,7 @@ class JumperApi {
     constructor(songDetector, imageSelector, frameReader) {
         this._mostRecentSong = "";
         this._songDetector = songDetector || new SongDetector();
-        this._imageSelecctor = imageSelector || new ActiveImageSelector();
+        this._imageSelecctor = imageSelector || new ImageSelector();
         this._frameReader = frameReader || new FrameReader();
     }
 
@@ -45,15 +45,13 @@ class JumperApi {
             frameIndex = (clientCurrentFrameIndex + 1) >= allFrames.frames.length ? 0 : clientCurrentFrameIndex + 1;
         }
 
-        const result = {
+        return this.ok({
             imageKey: allFrames.imageKey,
             frameCount: allFrames.frames.length,
             frameIndex: frameIndex,
             frame: allFrames.frames[frameIndex],
             palette: allFrames.palette,
-        };
-
-        return this.ok(result);
+        });
     }
 
     ok(value) { return { status: 200, body: value } };
