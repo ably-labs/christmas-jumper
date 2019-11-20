@@ -74,28 +74,17 @@ auto error_lights() -> void
 	for (auto i = 1; i < NUM_LIGHTS; i++) { strip.setPixelColor(i, strip.Color(0, 0, 0)); }
 }
 
-auto update_lights(const DynamicJsonDocument& doc) -> void
+auto update_lights(const DynamicJsonDocument& doc, int frame) -> void
 {
 	Serial.println("Updating lights");
 
-	int r, g, b;	
 	for (auto i = 0; i < NUM_LIGHTS; i++) {
-		auto hex_code = doc["rgbFrames"][0]["data"][i].as<char*>();
-
-		// Here are some dirty optimisations to reduce json payload sizes...		
-		if(strcmp(hex_code, "x")) {
-			hex_code = "000000"; // Shortened form for black
-		}
-		
-		if(strcmp(hex_code, "w")) {
-			hex_code = "ffffff"; // Shortened form for white
-		}
-
-		// Not the same as previous element
-		if (!strcmp(hex_code, "")) {
-			sscanf(hex_code, "%02x%02x%02x", &r, &g, &b);
-		}
-
+		auto image_frame = doc["rgbFrames"][frame]["b"];
+		const auto palette_ref = image_frame[i].as<int>();
+		const auto hex_code = doc["palette"][palette_ref].as<const char*>();
+				
+		int r, g, b;
+		sscanf(hex_code, "%02x%02x%02x", &r, &g, &b);
 		strip.setPixelColor(i, strip.Color(r, g, b));
 	}
 
@@ -115,38 +104,71 @@ auto setup() -> void
 	ensure_wifi_connected(ssid, password);
 }
 
+typedef struct
+{
+	char* image_key;
+	int frame_index;
+	int frame_duration;
+} image_identity;
+
+bool are_equal(const char* first, const char* second) {	return strcmp(first, second) == 0; }
+
 const int default_delay = 1000;
 int current_delay = default_delay;
+image_identity current_image = { "", -1, default_delay };
+
 
 auto loop() -> void
 {
 	Serial.println("Tick");
-	
+
 	ensure_wifi_connected(ssid, password);
 
 	const auto json = http_get("http://192.168.1.75:12271/active-image-frames");
-	Serial.println(json);
-	
 	if (json.equals("")) {
 		delay(current_delay);
 		return;
 	}
 
-	DynamicJsonDocument doc(16555); // This will support ~10 frames @ 170kb of memory
-	DeserializationError error = deserializeJson(doc, json);
+	Serial.println(json);
+	DynamicJsonDocument doc(20000); // This will support ~10 frames
+	const DeserializationError error = deserializeJson(doc, json);
 	if (error) {
-		Serial.print(F("deserializeJson() failed: "));
-		Serial.println(error.c_str());
-		
-		delay(1000);
+		delay(current_delay);
 		return;
 	}
 
-	const auto is_snaked = doc["snaked"].as<bool>();
-	const auto frame_count = doc["frameCount"].as<int>();
+	char* this_image_key = doc["imageKey"];
+	auto total_frames = doc["rgbFrames"].size();
 
-	update_lights(doc);
+	if (are_equal(current_image.image_key, this_image_key) == 0 && total_frames > 1)
+	{	
+		Serial.println("Image is part of an animation, stepping forwards");
+		current_image.frame_index = total_frames > 1 ? current_image.frame_index + 1 : current_image.frame_index;
+		current_image.frame_index = current_image.frame_index >= total_frames ? 0 : current_image.frame_index;
+		current_image.frame_duration = doc["rgbFrames"][current_image.frame_index]["duration"].as<int>();				
+	}
+	else
+	{
+		Serial.println("Image has changed");
+		current_image.image_key = this_image_key;
+		current_image.frame_index = 0;
+		current_image.frame_duration = default_delay;
+	}
+	   
+	const auto frame_to_show = current_image.frame_index == -1 ? 0 : current_image.frame_index;
+	const auto show_duration = current_image.frame_duration == -1 ? default_delay : current_image.frame_duration;
+
+	Serial.print("Displaying ");
+	Serial.print(current_image.image_key);
+	Serial.print(" at frame ");
+	Serial.print(current_image.frame_index);
+	Serial.print(" wth a delay of ");
+	Serial.print(current_image.frame_duration);
+	Serial.println();
+	
+	update_lights(doc, frame_to_show);
 	strip.show();
 
-	delay(current_delay);
+	delay(show_duration);
 }

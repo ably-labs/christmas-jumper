@@ -14,30 +14,40 @@ class FrameReader {
             const png = await jimp.read(`./images/${frame}`);
             const duration = this.establishFrameDuration(frame);
             const frameAsBytes = this.getSingleFrameFrom(png);
-
             let flattened = frameAsBytes.flat();
-            
-            // Dodgy optimisations - if the pixel colour hasn't changed
-            // replace it with an empty element to save space.
-            for(let i = flattened.length -1; i > 0; i--) {
-                const precursor = flattened[i - 1];
-                if (flattened[i] == precursor) {
-                    flattened[i] = "";
-                }
-            }
 
             rgbFrames.push({
-                data: flattened,
+                b: flattened,
                 duration: duration
             });
         }
 
+        const palette = this.paletteise(rgbFrames);
+
         return {
             imageKey: imageKey,
             snaked: this._snakeFrames,
-            frameCount: rgbFrames.length,
-            rgbFrames: rgbFrames
+            rgbFrames: rgbFrames,
+            palette: palette
         };
+    }
+
+    paletteise(rgbFrames) {
+        const allPixels = [];
+        for (const frame of rgbFrames) {
+            allPixels.push(...frame.b);
+        }
+
+        const palette = [...new Set(allPixels)];
+
+        for (const frame of rgbFrames) {
+            for (let index in frame.b) {
+                const paletteIndex = palette.indexOf(frame.b[index]);
+                frame.b[index] = paletteIndex;
+            }
+        }
+
+        return palette;
     }
 
     findFramesFor(imageKey) {
@@ -72,13 +82,13 @@ class FrameReader {
                 const pixel = jimp.intToRGBA(hex);
                 let hexCode = fullColorHex(pixel.r, pixel.g, pixel.b);
 
-                if(hexCode === "000000") {
+                /*if(hexCode === "000000") {
                     hexCode = "x"
                 }
 
                 if(hexCode === "ffffff") {
                     hexCode = "w"
-                }
+                }*/
 
                 row.push(hexCode);
             }
