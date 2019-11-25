@@ -7,6 +7,10 @@
 #include <avr/power.h>
 #endif
 
+const char* ssid = "asgard_router1";
+const char* password = "godhatesfangs";
+const String server_proto_and_host = "http://192.168.1.75:12271";
+
 image_identity current_image = { "_", -1, default_delay };
 
 auto setup() -> void
@@ -16,15 +20,15 @@ auto setup() -> void
 	Serial.begin(115200);
 	delay(100);
 
-	Networking::ensure_wifi_connected();
+	Networking::ensure_wifi_connected(ssid, password);
 }
 
 auto loop() -> void
 {
 	Serial.println(F("Loop()"));
-	Networking::ensure_wifi_connected();
+	Networking::ensure_wifi_connected(ssid, password);
 
-	auto api_path = "http://192.168.1.75:12271/active-image-frames?raw=true&currentImageKey=";
+	auto api_path = server_proto_and_host + "/active-image-frames?raw=true&currentImageKey=";
 	auto url_to_req = api_path + current_image.image_key + "&currentFrameIndex=" + current_image.frame_index;
 	
 	const auto framedata = Networking::http_get(url_to_req);

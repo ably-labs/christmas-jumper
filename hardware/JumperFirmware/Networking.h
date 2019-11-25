@@ -15,7 +15,7 @@ class Networking
 
 
  public:
-	static void ensure_wifi_connected();
+	static void ensure_wifi_connected(const char* const ssid, const char* const password);
 	static String http_get(const String urlToReq);
 };
 

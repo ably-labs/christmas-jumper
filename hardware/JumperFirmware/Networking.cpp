@@ -1,10 +1,7 @@
 #include <ESP8266WiFi.h>
 #include "Networking.h"
 
-constexpr auto ssid = "asgard_router1";;
-constexpr auto password = "godhatesfangs";
-
-auto Networking::ensure_wifi_connected() -> void
+auto Networking::ensure_wifi_connected(const char* const ssid, const char* const password) -> void
 {
 	if (WiFi.status() == WL_CONNECTED)
 	{
