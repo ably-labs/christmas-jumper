@@ -4,10 +4,6 @@
 constexpr auto ssid = "asgard_router1";;
 constexpr auto password = "godhatesfangs";
 
-void Networking::init()
-{
-}
-
 auto Networking::ensure_wifi_connected() -> void
 {
 	if (WiFi.status() == WL_CONNECTED)

@@ -113,10 +113,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\lib\Adafruit_NeoPixel\Adafruit_NeoPixel.h" />
+    <ClInclude Include="ApiResponseParser.h" />
+    <ClInclude Include="DataStructures.h" />
+    <ClInclude Include="SnakeLights.h" />
     <ClInclude Include="Networking.h" />
     <ClInclude Include="__vm\.JumperFirmware.vsarduino.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ApiResponseParser.cpp" />
+    <ClCompile Include="SnakeLights.cpp" />
     <ClCompile Include="Networking.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
