@@ -24,5 +24,13 @@
     <ClInclude Include="..\lib\Adafruit_NeoPixel\Adafruit_NeoPixel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Networking.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Networking.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

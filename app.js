@@ -1,4 +1,5 @@
 const JumperApi = require("./commands/JumperApi");
+const FrameSerializer = require("./commands/FrameSerializer");
 const express = require("express");
 const bodyParser = require('body-parser');
 
@@ -33,8 +34,16 @@ app.get("/active-image-frames", async (request, response) => {
     //       If the image hasn't changed since last time, don't re-download it, just return not modified.
     //       This will allow the hardware to play multi-frame animations without having them perma-streaming.
     //       Consuming code has to understand unpacking json for this to work.
+    
     const result = await jumperApiSingleton.getActiveImageFrame(request.query.currentImageKey, parseInt(request.query.currentFrameIndex));
-    response.send(result.body);
+    let output = result.body;
+
+    if (request.query.raw && request.query.raw == "true") {
+        const serializer = new FrameSerializer();
+        output = serializer.serialize(output);
+    }
+
+    response.send(output);
 });
 
 app.post("/what-song", async (request, response) => {
