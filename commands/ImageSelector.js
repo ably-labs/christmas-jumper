@@ -3,11 +3,17 @@ class ImageSelector {
         const cleaned = mostRecentSong.toLowerCase();
         const map = {
             "default": "default",
+            "have yourself a merry little christmas (remastered)": "hat",
+            "have yourself a merry little christmas": "hat",
             "jingle bell rock": "bell",
             "let it snow! let it snow! let it snow!": "snow",
             "rockin' around the christmas tree": "tree",
+            "rockin around the christmas tree": "tree",
             "santa claus is coming to town": "santa",
+            "waiting for christmas to arrive": "santa",
             "deck the halls": "holly",
+            "deck the hall": "holly",
+            "i wish it could be christmas everyday": "star",
             "we wish you a merry christmas": "pud",
             "fairytale of new york (feat. kirsty maccoll)": "star",
             "white christmas": "snow",
