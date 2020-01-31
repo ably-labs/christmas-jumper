@@ -49,7 +49,9 @@ class JumperApi {
             imageKey: allFrames.imageKey,
             frameCount: allFrames.frames.length,
             frameIndex: frameIndex,
-            frame: allFrames.frames[frameIndex],
+            frames: [ 
+                allFrames.frames[frameIndex] 
+            ],
             palette: allFrames.palette,
         });
     }

@@ -1,24 +1,40 @@
 class FrameSerializer {
-    serialize(frameData) {
+    serialize(frameData, compress) {
         const lines = [
             frameData.imageKey,
-            "frames " + frameData.frameCount,
-            "findex " + frameData.frameIndex,
+            `frames ${frameData.frameCount}`,
+            `findex ${frameData.frameIndex}`,
         ];
 
         lines.push(frameData.palette.join(","));
 
-        if(typeof frameData.frame != "undefined" && typeof frameData.frame.b != "undefined") {
-            lines.push(frameData.frame.duration + "," + frameData.frame.b.join(","));
-        }
-
-        if(typeof frameData.frames != "undefined") {
+        if(typeof frameData.frames !== "undefined") {
             for(const frame of frameData.frames) {
-                lines.push(frame.duration + "," + frame.b.join(","));
+                lines.push(this.prepareFrame(frame, compress));
             }
         }
 
-        return lines.join("\`") + "\`";
+
+        return lines.join('\`') + "\`";
+    }
+
+    prepareFrame(frame, compress) {
+        if(!compress) {
+            return frame.duration + "," + frame.b.join(",");
+        }        
+
+        const bitOccurance = [];
+        for(let bit of frame.b) {
+            if(bitOccurance.length > 0 && bitOccurance[bitOccurance.length - 1].value == bit) {
+                bitOccurance[bitOccurance.length - 1].times++;
+            } else {
+                bitOccurance.push({value: bit, times: 1});
+            }
+        }
+
+        const asStrings = bitOccurance.map(b => `${b.value}x${b.times} `.replace("x1 ", "").trim());
+
+        return frame.duration + "," + asStrings.join(",");
     }
 }
 

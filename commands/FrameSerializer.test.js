@@ -46,13 +46,20 @@ describe("Frame serializer", () => {
         expect(result.endsWith("\`")).toBe(true);
     });
 
+    it("Can compress pixel colours that run on", () =>{
+        const result = new FrameSerializer().serialize(frameWithCompressableImage, true);
+        const parts = result.split("\`");
+
+        expect(parts[4]).toBe("1000,0,1x3,2x2");
+    });
+
 });
 
 const validSingleFrameData = {
     imageKey: "default",
     frameCount: 1,
     frameIndex: 0,
-    frame: { b: [0, 1], duration: 1000 },
+    frames: [{ b: [0, 1], duration: 1000 }],
     palette: ["ff0000", "000000"],
 };
 
@@ -65,4 +72,12 @@ const validMultipleFrameData = {
         { b: [1, 0], duration: 1000 }
     ],
     palette: ["ff0000", "000000"],
+};
+
+const frameWithCompressableImage = {
+    imageKey: "default",
+    frameCount: 1,
+    frameIndex: 0,
+    frames: [{ b: [0, 1, 1, 1, 2, 2], duration: 1000 }],
+    palette: ["ff0000", "000000", "00000e"],
 };

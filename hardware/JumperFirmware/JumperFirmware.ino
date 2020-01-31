@@ -16,9 +16,10 @@ image_identity current_image = { "_", -1, default_delay };
 auto setup() -> void
 {
 	SnakeLightsClass::init();
-	
+	SnakeLightsClass::error_lights();
+
 	Serial.begin(115200);
-	delay(100);
+	delay(1000);
 
 	Networking::ensure_wifi_connected(ssid, password);
 }
@@ -26,6 +27,7 @@ auto setup() -> void
 auto loop() -> void
 {
 	Serial.println(F("Loop()"));
+
 	Networking::ensure_wifi_connected(ssid, password);
 
 	auto api_path = server_proto_and_host + "/active-image-frames?raw=true&currentImageKey=";

@@ -36,6 +36,11 @@ void SnakeLightsClass::update_lights(const String& palette, const String& pixels
 			continue;
 		}
 
+		// TODO: Compression support
+		// Split current_pixel_buffer on 'x' to deal with compression
+		// if there is an x, increment the offset by the number found after it
+		// because we've got repeating pixels.
+
 		const auto palette_ref = atoi(current_pixel_buffer);
 		const auto hex_code = hex_for_position(palette, palette_ref).c_str();
 
@@ -53,7 +58,7 @@ void SnakeLightsClass::update_lights(const String& palette, const String& pixels
 }
 
 
-void  SnakeLightsClass::error_lights()
+void SnakeLightsClass::error_lights()
 {
 	strip.setPixelColor(0, Adafruit_NeoPixel::Color(255, 0, 0));
 	for (auto i = 1; i < NUM_LIGHTS; i++) { strip.setPixelColor(i, Adafruit_NeoPixel::Color(0, 0, 0)); }

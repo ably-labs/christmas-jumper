@@ -79,7 +79,7 @@ describe("MusicToImageMapper", () => {
         await sut.detectSongFromClip("base64-encoded-bytes-from-browser");
         const result = await sut.getActiveImageFrame("default", 0);
 
-        expect(result.body["frame"]).toBe(randomSongReturned);
+        expect(result.body["frames"][0]).toBe(randomSongReturned);
     });
 
     it("getActiveImageFrame returns next frame when image is part of an animation",  async () => {
@@ -98,7 +98,7 @@ describe("MusicToImageMapper", () => {
 
         const result = await sut.getActiveImageFrame("some-animation", 0);
 
-        expect(result.body["frame"].b[0]).toBe(2); // recieved second array element
+        expect(result.body["frames"][0].b[0]).toBe(2); // recieved second array element
     });
 
     it("getActiveImageFrame returns first frame when image is part of an animation and currently showing final frame",  async () => {
@@ -117,6 +117,6 @@ describe("MusicToImageMapper", () => {
 
         const result = await sut.getActiveImageFrame("some-animation", 1);
 
-        expect(result.body["frame"].b[0]).toBe(1); // recieved first array element
+        expect(result.body["frames"][0].b[0]).toBe(1); // recieved first array element
     });
 });
