@@ -27,12 +27,12 @@ ApiResponse ApiResponseParserClass::parse(String framedata)
 	String parts[20]; // sure whatever.
 	split_string_into('`', framedata, parts);
 	const ApiResponse response = {
-		parts[0],
-		parts[1].substring(2).toInt(),
-		parts[2].substring(2).toInt(),
-		parts[4].substring(0, parts[4].indexOf(',')).toInt(),
-		parts[3],
-		parts[4]
+		parts[0], 												// image_key
+		parts[1].substring(2).toInt(), 							// total_frames
+		parts[2].substring(2).toInt(), 							// frame_index
+		parts[4].substring(0, parts[4].indexOf(',')).toInt(), 	// frame_display_duration
+		parts[3], 												// palette
+		parts[4]  												// first frame pixels
 	};	
 	return response;
 }

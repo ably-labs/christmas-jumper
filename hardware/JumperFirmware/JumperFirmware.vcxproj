@@ -77,7 +77,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\JumperFirmware;$(ProjectDir)..\..\..\..\Users\David Whitney\OneDrive\Documents\Arduino\libraries\Adafruit_NeoPixel;$(ProjectDir)..\..\..\..\Users\David Whitney\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\2.5.2\libraries\ESP8266WiFi\src;$(ProjectDir)..\..\..\..\Users\David Whitney\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\2.5.2\cores\esp8266;$(ProjectDir)..\..\..\..\Users\David Whitney\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\2.5.2\cores\esp8266\avr;$(ProjectDir)..\..\..\..\Users\David Whitney\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\2.5.2\cores\esp8266\libb64;$(ProjectDir)..\..\..\..\Users\David Whitney\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\2.5.2\cores\esp8266\spiffs;$(ProjectDir)..\..\..\..\Users\David Whitney\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\2.5.2\cores\esp8266\umm_malloc;$(ProjectDir)..\..\..\..\Users\David Whitney\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\2.5.2\variants\adafruit;$(ProjectDir)..\lib\Adafruit_NeoPixel;$(ProjectDir)..\..\..\..\Users\David Whitney\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\2.5.2\tools\sdk\include;$(ProjectDir)..\..\..\..\Users\David Whitney\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\2.5.2\tools\sdk\lwip2\include;$(ProjectDir)..\..\..\..\Users\David Whitney\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\2.5.2\tools\sdk\libc\xtensa-lx106-elf\include;$(ProjectDir)..\..\..\..\Users\David Whitney\AppData\Local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\2.5.0-3-20ed2b9\xtensa-lx106-elf\include\c++\4.8.2;$(ProjectDir)..\..\..\..\Users\David Whitney\AppData\Local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\2.5.0-3-20ed2b9\xtensa-lx106-elf\include\c++\4.8.2\xtensa-lx106-elf;$(ProjectDir)..\..\..\..\Users\David Whitney\AppData\Local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\2.5.0-3-20ed2b9\xtensa-lx106-elf\include;$(ProjectDir)..\..\..\..\Users\David Whitney\AppData\Local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\2.5.0-3-20ed2b9\lib\gcc\xtensa-lx106-elf\4.8.2\include;$(ProjectDir)..\..\..\..\Users\David Whitney\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\2.5.2\tools\sdk\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\JumperFirmware;$(ProjectDir)..\..\..\..\Users\David Whitney\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\2.5.2\libraries\ESP8266WiFi\src;$(ProjectDir)..\..\..\..\Users\David Whitney\OneDrive\Documents\Arduino\libraries\Adafruit_NeoPixel;$(ProjectDir)..\..\..\..\Users\David Whitney\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\2.5.2\cores\esp8266;$(ProjectDir)..\..\..\..\Users\David Whitney\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\2.5.2\cores\esp8266\avr;$(ProjectDir)..\..\..\..\Users\David Whitney\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\2.5.2\cores\esp8266\libb64;$(ProjectDir)..\..\..\..\Users\David Whitney\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\2.5.2\cores\esp8266\spiffs;$(ProjectDir)..\..\..\..\Users\David Whitney\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\2.5.2\cores\esp8266\umm_malloc;$(ProjectDir)..\..\..\..\Users\David Whitney\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\2.5.2\variants\adafruit;$(ProjectDir)..\..\..\..\Users\David Whitney\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\2.5.2\tools\sdk\include;$(ProjectDir)..\..\..\..\Users\David Whitney\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\2.5.2\tools\sdk\lwip2\include;$(ProjectDir)..\..\..\..\Users\David Whitney\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\2.5.2\tools\sdk\libc\xtensa-lx106-elf\include;$(ProjectDir)..\..\..\..\Users\David Whitney\AppData\Local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\2.5.0-3-20ed2b9\xtensa-lx106-elf\include\c++\4.8.2;$(ProjectDir)..\..\..\..\Users\David Whitney\AppData\Local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\2.5.0-3-20ed2b9\xtensa-lx106-elf\include\c++\4.8.2\xtensa-lx106-elf;$(ProjectDir)..\..\..\..\Users\David Whitney\AppData\Local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\2.5.0-3-20ed2b9\xtensa-lx106-elf\include;$(ProjectDir)..\..\..\..\Users\David Whitney\AppData\Local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\2.5.0-3-20ed2b9\lib\gcc\xtensa-lx106-elf\4.8.2\include;$(ProjectDir)..\..\..\..\Users\David Whitney\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\2.5.2\tools\sdk\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>$(ProjectDir)__vm\.JumperFirmware.vsarduino.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <IgnoreStandardIncludePath>true</IgnoreStandardIncludePath>
       <PreprocessorDefinitions>__ESP8266_esp8266__;__ESP8266_ESP8266__;_VMDEBUG=1;__ets__;ICACHE_FLASH;NONOSDK221=1;F_CPU=80000000L;LWIP_OPEN_SRC;TCP_MSS=536;LWIP_FEATURES=1;LWIP_IPV6=0;ARDUINO=10809;ARDUINO_ESP8266_ESP12;ARDUINO_ARCH_ESP8266;FLASHMODE_QIO;ESP8266;__cplusplus=201103L;_VMICRO_INTELLISENSE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -112,17 +112,18 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\lib\Adafruit_NeoPixel\Adafruit_NeoPixel.h" />
-    <ClInclude Include="ApiResponseParser.h" />
-    <ClInclude Include="DataStructures.h" />
-    <ClInclude Include="SnakeLights.h" />
-    <ClInclude Include="Networking.h" />
+    <ClInclude Include="lib\Adafruit_NeoPixel\Adafruit_NeoPixel.h" />
+    <ClInclude Include="src\ApiResponseParser.h" />
+    <ClInclude Include="src\DataStructures.h" />
+    <ClInclude Include="src\SnakeLights.h" />
+    <ClInclude Include="src\Networking.h" />
+    <ClInclude Include="__vm\.hardware.vsarduino.h" />
     <ClInclude Include="__vm\.JumperFirmware.vsarduino.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ApiResponseParser.cpp" />
-    <ClCompile Include="SnakeLights.cpp" />
-    <ClCompile Include="Networking.cpp" />
+    <ClCompile Include="src\ApiResponseParser.cpp" />
+    <ClCompile Include="src\SnakeLights.cpp" />
+    <ClCompile Include="src\Networking.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

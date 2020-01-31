@@ -1,7 +1,7 @@
-#include "DataStructures.h"
-#include "ApiResponseParser.h"
-#include "SnakeLights.h"
-#include "Networking.h"
+#include "src/DataStructures.h"
+#include "src/ApiResponseParser.h"
+#include "src/SnakeLights.h"
+#include "src/Networking.h"
 #include <ESP8266WiFi.h>
 #ifdef __AVR__
 #include <avr/power.h>
