@@ -2,8 +2,8 @@ class FrameSerializer {
     serialize(frameData, compress) {
         const lines = [
             frameData.imageKey,
-            `frames ${frameData.frameCount}`,
-            `findex ${frameData.frameIndex}`,
+            `fc ${frameData.frameCount}`,
+            `fi ${frameData.frameIndex}`,
         ];
 
         lines.push(frameData.palette.join(","));

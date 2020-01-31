@@ -7,8 +7,8 @@ describe("Frame serializer", () => {
         const parts = result.split("\`");
 
         expect(parts[0]).toBe("default");
-        expect(parts[1]).toBe("frames 1");
-        expect(parts[2]).toBe("findex 0");
+        expect(parts[1]).toBe("fc 1");
+        expect(parts[2]).toBe("fi 0");
     });
 
     it("Can correctly serialize the frame duration", () =>{
@@ -52,7 +52,6 @@ describe("Frame serializer", () => {
 
         expect(parts[4]).toBe("1000,0,1x3,2x2");
     });
-
 });
 
 const validSingleFrameData = {

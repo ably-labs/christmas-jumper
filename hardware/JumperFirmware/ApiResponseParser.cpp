@@ -28,8 +28,8 @@ ApiResponse ApiResponseParserClass::parse(String framedata)
 	split_string_into('`', framedata, parts);
 	const ApiResponse response = {
 		parts[0],
-		parts[1].substring(6).toInt(),
-		parts[2].substring(6).toInt(),
+		parts[1].substring(2).toInt(),
+		parts[2].substring(2).toInt(),
 		parts[4].substring(0, parts[4].indexOf(',')).toInt(),
 		parts[3],
 		parts[4]
