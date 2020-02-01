@@ -17,7 +17,6 @@ image_identity current_image = { "_", -1, default_delay };
 auto setup() -> void
 {
 	snake_lights::init();
-	snake_lights::error_lights();
 
 	Serial.begin(115200);
 	delay(1000);
