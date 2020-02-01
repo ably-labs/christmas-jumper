@@ -1,8 +1,8 @@
 /.vs
 /.vscode
-JumperFirmware/src/Debug
-JumperFirmware/src/*.user
-JumperFirmware/src/__vm
+JumperFirmware/.vscode
+JumperFirmware/Debug
+JumperFirmware/*.user
+JumperFirmware/__vm
 /*.DotSettings
 /*.v3.ncrunch*
-/JumperFirmware/src/Debug/*.*

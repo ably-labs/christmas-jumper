@@ -7,18 +7,12 @@
 	#include "WProgram.h"
 #endif
 
-class SnakeLightsClass
+class snake_lights
 {
- protected:
-
-
- public:
+public:
 	static void init();
 	static void update_lights(const String& palette, const String& pixels);
 	static void error_lights();
 };
 
-extern SnakeLightsClass LightManager;
-
 #endif
-

@@ -5,7 +5,7 @@
 #define NUM_LIGHTS  256
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_LIGHTS, PIN, NEO_GRB + NEO_KHZ800);
 
-void SnakeLightsClass::init()
+void snake_lights::init()
 {
 	strip.begin();
 	strip.show();
@@ -19,7 +19,7 @@ auto hex_for_position(const String palette, int palette_ref) -> String
 }
 
 
-void SnakeLightsClass::update_lights(const String& palette, const String& pixels)
+void snake_lights::update_lights(const String& palette, const String& pixels)
 {
 	const auto pixel_start_position = pixels.indexOf(',') + 1;
 
@@ -58,10 +58,10 @@ void SnakeLightsClass::update_lights(const String& palette, const String& pixels
 }
 
 
-void SnakeLightsClass::error_lights()
+void snake_lights::error_lights()
 {
 	strip.setPixelColor(0, Adafruit_NeoPixel::Color(255, 0, 0));
 	for (auto i = 1; i < NUM_LIGHTS; i++) { strip.setPixelColor(i, Adafruit_NeoPixel::Color(0, 0, 0)); }
 }
 
-SnakeLightsClass LightManager;
+snake_lights LightManager;

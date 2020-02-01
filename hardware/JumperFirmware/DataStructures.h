@@ -19,7 +19,7 @@ typedef struct
 	int frame_display_duration;
 	String palette;
 	String pixels;
-} ApiResponse;
+} api_response;
 
 
 #endif

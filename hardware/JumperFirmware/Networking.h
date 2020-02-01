@@ -9,7 +9,7 @@
 	#include "WProgram.h"
 #endif
 
-class Networking
+class networking
 {
  protected:
 
@@ -19,7 +19,7 @@ class Networking
 	static String http_get(const String urlToReq);
 };
 
-extern Networking networking;
+extern networking networking;
 
 #endif
 

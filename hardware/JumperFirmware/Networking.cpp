@@ -1,7 +1,7 @@
 #include <ESP8266WiFi.h>
 #include "Networking.h"
 
-auto Networking::ensure_wifi_connected(const char* const ssid, const char* const password) -> void
+auto networking::ensure_wifi_connected(const char* const ssid, const char* const password) -> void
 {
 	if (WiFi.status() == WL_CONNECTED)
 	{
@@ -23,7 +23,7 @@ auto Networking::ensure_wifi_connected(const char* const ssid, const char* const
 	Serial.println(F("WiFi connected"));
 }
 
-auto Networking::http_get(const String urlToReq) -> String
+auto networking::http_get(const String urlToReq) -> String
 {
 	Serial.println("Requesting: " + urlToReq);
 
@@ -72,5 +72,3 @@ auto Networking::http_get(const String urlToReq) -> String
 	Serial.println(body);
 	return body;
 }
-
-Networking networking;

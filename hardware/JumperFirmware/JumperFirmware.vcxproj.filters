@@ -18,22 +18,22 @@
     <None Include="JumperFirmware.ino" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="__vm\.hardware.vsarduino.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="lib\Adafruit_NeoPixel\Adafruit_NeoPixel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ApiResponseParser.h">
+    <ClInclude Include="ApiResponseParser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\DataStructures.h">
+    <ClInclude Include="DataStructures.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\SnakeLights.h">
+    <ClInclude Include="SnakeLights.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Networking.h">
+    <ClInclude Include="Networking.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StringUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="__vm\.JumperFirmware.vsarduino.h">
@@ -41,13 +41,16 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\ApiResponseParser.cpp">
+    <ClCompile Include="ApiResponseParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\SnakeLights.cpp">
+    <ClCompile Include="SnakeLights.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Networking.cpp">
+    <ClCompile Include="Networking.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StringUtils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
