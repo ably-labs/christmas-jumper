@@ -24,7 +24,7 @@ auto networking::ensure_wifi_connected(const char* const ssid, const char* const
 	Serial.println(F("WiFi connected"));
 }
 
-auto networking::http_get(const String& url_to_req) -> http_response
+auto networking::http_get(const String& url_to_req, const String headers[], const int header_count) -> http_response
 {
 	Serial.println("Requesting: " + url_to_req);
 
@@ -48,6 +48,12 @@ auto networking::http_get(const String& url_to_req) -> http_response
 	
 	client.println("GET " + url + " HTTP/1.0");
 	client.println("Host: " + host);
+
+	for(auto i = 0; i < header_count; i++)
+	{
+		client.println(headers[i].c_str());
+	}
+	
 	client.println(F("Connection: close"));
 	if (client.println() == 0) {
 		Serial.println(F("Failed to send request"));

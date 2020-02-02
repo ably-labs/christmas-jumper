@@ -2,6 +2,7 @@ const JumperApi = require("./commands/JumperApi");
 const FrameSerializer = require("./commands/FrameSerializer");
 const express = require("express");
 const bodyParser = require('body-parser');
+const serializer = new FrameSerializer();
 
 const app = express();
 
@@ -32,15 +33,23 @@ app.get("/active-image-frames", async (request, response) => {
     const result = await jumperApiSingleton.getActiveImageFrame(request.query.currentImageKey, parseInt(request.query.currentFrameIndex));
     let output = result.body;
 
-    if (request.query.shrink && request.query.shrink == "true") {
-        const serializer = new FrameSerializer();
-        
+    if (headerForLedBytes(request) || queryStringOverride(request)) {        
+        const compress = headerForPackedRgb(request) || queryStringOverride(request);
+
         response.set("Content-Type", "text/led-bytes");
-        response.set("Content-Encoding", "packed-rgb");
-        output = serializer.serialize(output, true);
+
+        if (compress) {
+            response.set("Content-Encoding", "packed-rgb");
+        }
+
+        output = serializer.serialize(output, compress);
+        output += "\r";
+    } else {
+        response.set("Content-Type", "application/json");
+        output = JSON.stringify(output) + "\r";
     }
 
-    response.send(output + "\r");
+    response.send(output);
 });
 
 app.post("/what-song", async (request, response) => {
@@ -51,5 +60,9 @@ app.post("/what-song", async (request, response) => {
 app["setMostRecentSong"] = (song) => { // Testing hook.
     jumperApiSingleton._mostRecentSong = song;
 };
+
+const headerForLedBytes = (request) => (request.headers["accept"] == "text/led-bytes");
+const headerForPackedRgb = (request) => (request.headers["accept-encoding"] == "packed-rgb");
+const queryStringOverride = (request) => (request.query.shrink && request.query.shrink == "true");
 
 module.exports = app;

@@ -18,6 +18,13 @@ describe("The App", () => {
         expect(containsBracket).toBe(false);
     });
 
+    it("/active-image-frames can send non-json frames when requested to in Accept header", async () => {
+        const result = await request(app).get("/active-image-frames?currentImageKey=default").set("Accept", "text/led-bytes").set("Accept-Encoding", "packed-rgb");
+        
+        const containsBracket = result.text.indexOf("{") != -1; // lol, not json.
+        expect(containsBracket).toBe(false);
+    });
+
     it("/active-image-frames returns same etag when response hasn't changed", async () => {
         const result1 = await request(app).get("/active-image-frames?currentImageKey=frametest&currentFrameIndex=0&raw=true");
         const result2 = await request(app).get("/active-image-frames?currentImageKey=frametest&currentFrameIndex=1&raw=true");
@@ -29,7 +36,7 @@ describe("The App", () => {
         const result1 = await request(app).get("/active-image-frames?currentImageKey=default&currentFrameIndex=0&raw=true");
         app["setMostRecentSong"]("sleigh ride");
 
-        const result2 = await request(app).get("/active-image-frames?currentImageKey=default&currentFrameIndex=1&raw=true");
+        const result2 = await request(app).get("/active-image-frames?currentImageKey=default&currentFrameIndex=0&raw=true");
 
         expect(result1.header["etag"]).not.toEqual(result2.header["etag"]);
     });

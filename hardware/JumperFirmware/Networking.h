@@ -13,7 +13,7 @@ class networking
 {
  public:
 	static void ensure_wifi_connected(const char* const ssid, const char* const password);
-	static http_response http_get(const String& url_to_req);
+	static http_response http_get(const String& url_to_req, const String headers[], int header_count);
 };
 
 #endif

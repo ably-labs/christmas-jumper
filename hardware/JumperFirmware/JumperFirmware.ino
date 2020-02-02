@@ -30,10 +30,16 @@ auto loop() -> void
 
 	networking::ensure_wifi_connected(ssid, password);
 
-	const auto api_path = server_proto_and_host + "/active-image-frames?shrink=true&currentImageKey=";
+	const auto api_path = server_proto_and_host + "/active-image-frames?currentImageKey=";
 	const auto url_to_req = api_path + current_image.image_key + "&currentFrameIndex=" + current_image.frame_index;
+
+	const String headers[2] = {
+		F("Accept: text/led-bytes"),
+		F("Accept-Encoding: packed-rgb")
+	};
 	
-	const auto framedata = networking::http_get(url_to_req);
+	const auto framedata = networking::http_get(url_to_req, headers, 2);
+	
 	if (framedata.body.equals("")) {
 		delay(default_delay);
 		return;
