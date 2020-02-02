@@ -44,6 +44,8 @@ auto networking::http_get(const String& url_to_req) -> http_response
 		return { 500, _, _ };;
 	}
 
+	Serial.println(F("Connected."));
+	
 	client.println("GET " + url + " HTTP/1.0");
 	client.println("Host: " + host);
 	client.println(F("Connection: close"));
@@ -58,13 +60,13 @@ auto networking::http_get(const String& url_to_req) -> http_response
 		Serial.println(F("Status code wasn't 200."));
 		return { 500, _, _ };;
 	}
-
+	
 	String response;
 	while (client.available())
 	{
 		response += client.readStringUntil('\r');
 	}
-
+	
 	const String delimiter = F("Connection: close");
 	const auto index_of_close = response.lastIndexOf(delimiter);
 	auto body = response.substring(index_of_close + delimiter.length());

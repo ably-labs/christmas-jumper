@@ -40,7 +40,7 @@ app.get("/active-image-frames", async (request, response) => {
         output = serializer.serialize(output, true);
     }
 
-    response.send(output);
+    response.send(output + "\r");
 });
 
 app.post("/what-song", async (request, response) => {

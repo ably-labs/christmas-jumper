@@ -45,4 +45,9 @@ describe("The App", () => {
         expect(result2.status).toBe(304);
     });
 
+    it("/active-image-frames always ends with a \\r because that speeds up the http client on hardware", async () => {
+        const result = await request(app).get('/active-image-frames');
+
+        expect(result.text.endsWith("\r")).toBe(true);
+    });
 });
