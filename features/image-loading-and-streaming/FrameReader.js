@@ -6,22 +6,19 @@ class FrameReader {
         this._snakeFrames = snakeFrames;
     }
 
-    async execute(imageKey) {
-        const frames = [];
+    async loadFramesFor(imageKey) {
+        let frames = [];
         const frameImages = this.findFramesFor(imageKey);
 
         for(let frame of frameImages) {
             const bitmapData = await jimp.read(`./images/${frame}`);
             const duration = this.establishFrameDuration(frame);
             const frameAsBytes = this.getSingleFrameFrom(bitmapData);
-            
-            frames.push({
-                b: frameAsBytes,
-                duration: duration
-            });
+            frames.push({ b: frameAsBytes, duration: duration });
         }
 
-        const palette = this.paletteise(frames);
+        const palette = this.generatePaletteFrom(frames);
+        frames = this.swapColoursForPaletteReferences(frames, palette);
 
         return {
             imageKey: imageKey,
@@ -31,22 +28,24 @@ class FrameReader {
         };
     }
 
-    paletteise(rgbFrames) {
+
+    generatePaletteFrom(rgbFrames) {
         const allPixels = [];
         for (const frame of rgbFrames) {
             allPixels.push(...frame.b);
         }
 
-        const palette = [...new Set(allPixels)];
+        return [...new Set(allPixels)];
+    }
 
+    swapColoursForPaletteReferences(rgbFrames, palette) {
         for (const frame of rgbFrames) {
             for (let index in frame.b) {
                 const paletteIndex = palette.indexOf(frame.b[index]);
                 frame.b[index] = paletteIndex;
             }
         }
-
-        return palette;
+        return rgbFrames;
     }
 
     findFramesFor(imageKey) {

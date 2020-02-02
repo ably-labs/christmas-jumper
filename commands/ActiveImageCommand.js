@@ -8,8 +8,8 @@ class ActiveImageCommand {
 
     async execute(request, response) {
         const songOrDefault = this._currentSongStorage.getOrDefault();
-        const result = this._imageSelector.getImageKeyForSong(songOrDefault);
-        response.send(result + "\r");
+        const imageKey = this._imageSelector.getImageKeyForSong(songOrDefault);
+        response.send(imageKey + "\r");
     }
 }
 

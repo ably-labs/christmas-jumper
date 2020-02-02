@@ -7,17 +7,17 @@ class WhatSongCommand {
     }
 
     async execute(request, response) {        
-        const byteArray = Buffer.from(request.body.bytes, 'base64');
-        const potentialSong = await this._songDetector.execute(byteArray);
+        const imageBytes = Buffer.from(request.body.bytes, 'base64');
+        const detectionResponse = await this._songDetector.execute(imageBytes);
         
-        if (potentialSong.hasOwnProperty("unrecognised")) {  
-            const previous = this._currentSongStorage.get();       
-            response.send({ status: 200, body: previous });
+        if (detectionResponse.hasOwnProperty("unrecognised")) {  
+            const lastDetectedSong = this._currentSongStorage.get();       
+            response.send({ status: 200, body: lastDetectedSong });
             return;
         }
 
-        this._currentSongStorage.save(potentialSong);
-        response.send({ status: 200, body: potentialSong });
+        this._currentSongStorage.save(detectionResponse);
+        response.send({ status: 200, body: detectionResponse });
     }
 }
 
