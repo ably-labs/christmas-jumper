@@ -1,6 +1,6 @@
-const FrameSerializer = require("./FrameSerializer");
+const FrameSerializer = require("./LedBytesSerializer");
 
-describe("FrameSerializer", () => {
+describe("LedBytesSerializer", () => {
 
     it("can serialize a frame to the non-json wireformat", () => {
         const result = new FrameSerializer().serialize(validSingleFrameData);

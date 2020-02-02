@@ -1,4 +1,4 @@
-class FrameSerializer {
+class LedBytesSerializer {
     serialize(frameData, compress) {
         const lines = [
             frameData.imageKey,
@@ -16,6 +16,7 @@ class FrameSerializer {
 
         return lines.join('\`') + "\`";
     }
+
 
     prepareFrame(singleFrame, foldRepeatingPixelsTogether) {
         if (!foldRepeatingPixelsTogether) {
@@ -35,6 +36,18 @@ class FrameSerializer {
 
         return singleFrame.duration + "," + pixelSequenceAsString.join(",");
     }
+    
+    shouldSerialize(request) {
+        return this.acceptsLedBytes(request) || this.shrinkParamInQueryString(request);
+    }
+
+    shouldCompress(request) {
+        return this.acceptsEncodingPackedRgb(request) || this.shrinkParamInQueryString(request);
+    }
+
+    acceptsLedBytes(request)  { return request.headers["accept"] == "text/led-bytes"; };
+    acceptsEncodingPackedRgb(request) { return request.headers["accept-encoding"] == "packed-rgb"; };
+    shrinkParamInQueryString(request) { return  request.query.shrink && request.query.shrink == "true"; }
 }
 
-module.exports = FrameSerializer;
+module.exports = LedBytesSerializer;

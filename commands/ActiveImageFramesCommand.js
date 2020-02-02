@@ -1,4 +1,4 @@
-const FrameSerializer = require("../features/image-loading-and-streaming/FrameSerializer");
+const LedBytesSerializer = require("../features/image-loading-and-streaming/LedBytesSerializer");
 const ImageSelector = require("../features/image-selection/ImageSelector");
 const FrameReader = require("../features/image-loading-and-streaming/FrameReader");
 const CachingFrameReader = require("../features/image-loading-and-streaming/CachingFrameReader");
@@ -8,7 +8,7 @@ class ActiveImageFramesCommand {
         this._currentSongStorage = currentSongStorage;
         this._imageSelector = imageSelector || new ImageSelector();
         this._frameReader = frameReader || new CachingFrameReader(new FrameReader());
-        this._serializer = new FrameSerializer();
+        this._ledBytesSerializer = new LedBytesSerializer();
     }
 
     async execute(request, response) {
@@ -32,15 +32,15 @@ class ActiveImageFramesCommand {
     }
     
     sendResponse(request, response, output) {
-        if (this.headerForLedBytes(request) || this.queryStringOverride(request)) {
-            const compress = this.headerForPackedRgb(request) || this.queryStringOverride(request);
+        if (this._ledBytesSerializer.shouldSerialize(request)) {
+            const compress = this._ledBytesSerializer.shouldCompress(request);
             response.set("Content-Type", "text/led-bytes");
             
             if (compress) {
                 response.set("Content-Encoding", "packed-rgb");
             }
             
-            var body = this._serializer.serialize(output, compress) + "\r";
+            var body = this._ledBytesSerializer.serialize(output, compress) + "\r";
             response.send(body);
             return;
         }
@@ -57,10 +57,6 @@ class ActiveImageFramesCommand {
         }
         return frameIndex;
     }
-
-    headerForLedBytes(request)  { return request.headers["accept"] == "text/led-bytes"; };
-    headerForPackedRgb(request) { return request.headers["accept-encoding"] == "packed-rgb"; };
-    queryStringOverride(request) { return  request.query.shrink && request.query.shrink == "true"; }
 }
 
 module.exports = ActiveImageFramesCommand;
