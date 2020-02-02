@@ -3,7 +3,7 @@ const ImageSelector = require("./ImageSelector");
 
 const sut = new ImageSelector();
 
-describe("ActiveImageSelector", () => {
+describe("ImageSelector", () => {
 
     it("can suggest an image ignoring the case of song names", () => {
         const returnedKey = sut.getImageKeyForSong("jingle BELL rock")

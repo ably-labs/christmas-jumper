@@ -3,7 +3,7 @@ const FakeResponse = require("../test-helpers/FakeResponse");
 const InMemoryCurrentSongStorage = require("../features/state-management/InMemoryCurrentSongStorage");
 const GetActiveImageFramesCommand = require("./ActiveImageFramesCommand");
 
-describe("MusicToImageMapper", () => {
+describe("ActiveImageFramesCommand handler", () => {
 
     let response, storage;
     beforeEach(() => {
@@ -11,7 +11,7 @@ describe("MusicToImageMapper", () => {
         storage = new InMemoryCurrentSongStorage();
     });
 
-    it("GetActiveImageFramesCommand asks the frame reader for an image based on the most recent song detected.",  async () => {
+    it("returns image data based on the most recent song detected",  async () => {
         storage.save("jingle bell rock");
         const sut = new GetActiveImageFramesCommand(storage);
 
@@ -23,7 +23,7 @@ describe("MusicToImageMapper", () => {
         expect(responseJson().imageKey).toBe("bell");
     });
 
-    it("GetActiveImageFramesCommand returns next frame when image is part of an animation",  async () => {
+    it("returns next frame when the current image image is part of an animation",  async () => {
         storage.save("frametest");
         const sut = new GetActiveImageFramesCommand(storage);
 
@@ -35,7 +35,7 @@ describe("MusicToImageMapper", () => {
         expect(responseJson().frameIndex).toBe(1);
     });
 
-    it("GetActiveImageFramesCommand returns first frame when image is part of an animation and currently showing final frame",  async () => {
+    it("returns first frame when image is part of an animation and we're currently showing the final frame",  async () => {
         storage.save("frametest");
         const sut = new GetActiveImageFramesCommand(storage);
 

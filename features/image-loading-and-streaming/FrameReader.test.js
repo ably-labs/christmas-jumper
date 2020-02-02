@@ -11,7 +11,7 @@ describe("FrameReader", () => {
         expect(JSON.stringify(result.frames[0].b)).toBe(JSON.stringify(expectation));
     });
 
-    it("single frame images has -1 duration", async () => {
+    it("single frame images have -1 duration", async () => {
         const result = await sut.execute("default");
 
         expect(result.frames[0].duration).toBe(-1);

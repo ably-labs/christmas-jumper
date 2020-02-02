@@ -1,8 +1,8 @@
 const FrameSerializer = require("./FrameSerializer");
 
-describe("Frame serializer", () => {
+describe("FrameSerializer", () => {
 
-    it("Can serialize a frame to the non-json wireformat", () => {
+    it("can serialize a frame to the non-json wireformat", () => {
         const result = new FrameSerializer().serialize(validSingleFrameData);
         const parts = result.split("\`");
 
@@ -11,28 +11,28 @@ describe("Frame serializer", () => {
         expect(parts[2]).toBe("fi 0");
     });
 
-    it("Can correctly serialize the frame duration", () => {
+    it("can correctly serialize the frame duration", () => {
         const result = new FrameSerializer().serialize(validSingleFrameData);
         const parts = result.split("\`");
 
         expect(parts[4].startsWith("1000,")).toBe(true);
     });
 
-    it("Can correctly serialize the palette", () => {
+    it("can correctly serialize the palette", () => {
         const result = new FrameSerializer().serialize(validSingleFrameData);
         const parts = result.split("\`");
 
         expect(parts[3]).toBe("ff0000,000000");
     });
 
-    it("Can correctly serialize a single frame", () => {
+    it("can correctly serialize a single frame", () => {
         const result = new FrameSerializer().serialize(validSingleFrameData);
         const parts = result.split("\`");
 
         expect(parts[4]).toBe("1000,0,1");
     });
 
-    it("Can correctly serialize multiple frames", () => {
+    it("can correctly serialize multiple frames", () => {
         const result = new FrameSerializer().serialize(validMultipleFrameData);
         const parts = result.split("\`");
 
@@ -40,13 +40,13 @@ describe("Frame serializer", () => {
         expect(parts[5]).toBe("1000,1,0");
     });
 
-    it("Always ends the packet with a backtick", () => {
+    it("always ends the packet with a backtick", () => {
         const result = new FrameSerializer().serialize(validMultipleFrameData);
 
         expect(result.endsWith("\`")).toBe(true);
     });
 
-    it("Can compress pixel colours that run on", () => {
+    it("can compress pixel colours when they appear in sequence (e.g. 1,1,1,1 becomes 1x4)", () => {
         const result = new FrameSerializer().serialize(frameWithCompressableImage, true);
         const parts = result.split("\`");
 
@@ -54,7 +54,7 @@ describe("Frame serializer", () => {
         console.log(result);
     });
 
-    it("Can compress pixel colours that run on, when there are multiple frames", () => {
+    it("Can compress pixel colours when they appear in sequence, and there are multiple frames in the image", () => {
         const result = new FrameSerializer().serialize(multipleFrameWithCompressableImage, true);
         const parts = result.split("\`");
 

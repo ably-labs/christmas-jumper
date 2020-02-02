@@ -2,7 +2,7 @@ const FakeResponse = require("../test-helpers/FakeResponse");
 const InMemoryCurrentSongStorage = require("../features/state-management/InMemoryCurrentSongStorage");
 const WhatSongCommand = require("./WhatSongCommand");
 
-describe("MusicToImageMapper", () => {
+describe("WhatSongCommand handler", () => {
 
     let response, storage;
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe("MusicToImageMapper", () => {
         storage = new InMemoryCurrentSongStorage();
     });
     
-    it("WhatSongCommand when the song detector doesn't know a song, returns previous most recent",  async () => {
+    it("returns previously heard song title when it doesn't recognise the current track",  async () => {
         storage.save("previously heard");
         const songDetector = { "execute": () => { return { "unrecognised": true } } };
         const sut = new WhatSongCommand(storage, songDetector);
@@ -20,7 +20,7 @@ describe("MusicToImageMapper", () => {
         expect(response.lastSentResponse().body).toBe("previously heard");
     });
 
-    it("WhatSongCommand returns detected song.",  async () => {
+    it("returns the name of any detected song",  async () => {
         const request = { body: { bytes: Buffer.from([1,2,3,4]).toString("base64") } };
         const songDetector = { "execute": (bytes) => { return "some detected song"; } };
 
@@ -30,7 +30,7 @@ describe("MusicToImageMapper", () => {
         expect(response.lastSentResponse().body).toBe("some detected song");
     });
 
-    it("WhatSongCommand saves detected song in state.",  async () => {
+    it("saves the last detected song title in state",  async () => {
         const request = { body: { bytes: Buffer.from([1,2,3,4]).toString("base64") } };
         const songDetector = { "execute": (bytes) => { return "some detected song"; } };
 

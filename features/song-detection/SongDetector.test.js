@@ -1,8 +1,8 @@
 const SongDetector = require("./SongDetector");
 
-describe("Song detector", () => {
+describe("SongDetector", () => {
 
-    it("Execute returns song title from AudD API call.",  async () => {
+    it("returns song title from AudD API call",  async () => {
         const sut = new SongDetector(fakeConfig, mockAxios, mockAzure);
 
         const result = await sut.execute(new ArrayBuffer(0));
@@ -10,7 +10,7 @@ describe("Song detector", () => {
         expect(result).toBe("some title");
     });
 
-    it("Execute calls AudD with API token from configuration",  async () => {
+    it("calls AudD with API token from configuration",  async () => {
         const sut = new SongDetector(fakeConfig, mockAxios, mockAzure);
 
         await sut.execute(new ArrayBuffer(0));
@@ -18,7 +18,7 @@ describe("Song detector", () => {
         expect(urlsCalled[0].startsWith("https://api.audd.io/?api_token=some-audd-token")).toBe(true);
     });
 
-    it("Execute returns unrecognised when AudD doesn't know the song",  async () => {
+    it("returns unrecognised when AudD doesn't know the song",  async () => {
         const sut = new SongDetector(fakeConfig, audDdoesntKnowTheSong, mockAzure);
 
         const result = await sut.execute(new ArrayBuffer(0));
@@ -26,7 +26,7 @@ describe("Song detector", () => {
         expect(result.unrecognised).toBe(true);
     });
 
-    it("Execute instructs AudD to download song from azure blob storage",  async () => {
+    it("instructs AudD to download song from azure blob storage",  async () => {
         const sut = new SongDetector(fakeConfig, mockAxios, mockAzure);
 
         await sut.execute(new ArrayBuffer(0));
@@ -35,7 +35,7 @@ describe("Song detector", () => {
         expect(parts).toBe("http://some/uploaded/file/location");
     });
 
-    it.skip("Integration test: Can detect song that we know about when run against the real AudD API",  async () => {
+    it.skip("Integration test: can detect song that we know about when run against the real AudD API",  async () => {
         const sut = new SongDetector();
         const songContents = await require("fs").readFileSync("./test-data/02 - Jingle Bell Rock.mp3");
 
@@ -45,7 +45,7 @@ describe("Song detector", () => {
     }, 10 * 1000);
 
     
-    it.skip("Integration test: Can detect multiple songs in sequence",  async () => {
+    it.skip("Integration test: can detect multiple songs in sequence",  async () => {
         const sut = new SongDetector();
         const songContents1 = await require("fs").readFileSync("./test-data/01 - Rockin' Around The Christmas Tree.mp3");
         const songContents2 = await require("fs").readFileSync("./test-data/02 - Jingle Bell Rock.mp3");

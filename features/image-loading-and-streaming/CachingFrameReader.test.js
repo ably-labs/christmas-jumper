@@ -1,8 +1,8 @@
 const CachingFrameReader = require("./CachingFrameReader");
 
-describe("Frame serializer", () => {
+describe("CachingFrameReader", () => {
 
-    it("Will only load images from disk once.", () => {
+    it("Will only load images from disk once", () => {
         var called = 0;
         const imageKey = "default";
         const nonCachingReader = {
@@ -19,7 +19,7 @@ describe("Frame serializer", () => {
         expect(called).toBe(1);
     });
 
-    it("Will return the same data for the same key on subsequent calls.", async () => {        
+    it("Will return the same data for the same key on subsequent calls", async () => {        
         const imageKey = "default";        
         const nonCachingReader = {
             execute: () => {
