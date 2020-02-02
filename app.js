@@ -51,4 +51,8 @@ app.post("/what-song", async (request, response) => {
     response.send(result);
 });
 
+app["setMostRecentSong"] = (song) => { // Testing hook.
+    jumperApiSingleton._mostRecentSong = song;
+};
+
 module.exports = app;
