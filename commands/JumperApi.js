@@ -1,6 +1,7 @@
 const ImageSelector = require("./ImageSelector");
 const SongDetector = require("./SongDetector");
 const FrameReader = require("./FrameReader");
+const CachingFrameReader = require("./CachingFrameReader");
 
 class JumperApi {
 
@@ -8,7 +9,7 @@ class JumperApi {
         this._mostRecentSong = "";
         this._songDetector = songDetector || new SongDetector();
         this._imageSelecctor = imageSelector || new ImageSelector();
-        this._frameReader = frameReader || new FrameReader();
+        this._frameReader = frameReader || new CachingFrameReader(new FrameReader());
     }
 
     mostRecentSong() {
