@@ -6,7 +6,7 @@ const sut = new ImageSelector();
 describe("ActiveImageSelector", () => {
 
     it("can suggest an image ignoring the case of song names", () => {
-        const returnedKey = sut.execute("jingle BELL rock")
+        const returnedKey = sut.getImageKeyForSong("jingle BELL rock")
         expect(returnedKey).toBe("bell");
     });
 
@@ -28,7 +28,7 @@ describe("ActiveImageSelector", () => {
         ["Rudolph the Red-Nosed Reindeer", "deer"],
         ["Frosty the Snowman", "frosty"]
     ]).it('Maps %s to %s', (song, key) => {
-        const returnedImageKey = sut.execute(song);
+        const returnedImageKey = sut.getImageKeyForSong(song);
 
         expect(returnedImageKey).toBe(key);
     });

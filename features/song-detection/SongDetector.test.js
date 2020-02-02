@@ -18,6 +18,14 @@ describe("Song detector", () => {
         expect(urlsCalled[0].startsWith("https://api.audd.io/?api_token=some-audd-token")).toBe(true);
     });
 
+    it("Execute returns unrecognised when AudD doesn't know the song",  async () => {
+        const sut = new SongDetector(fakeConfig, audDdoesntKnowTheSong, mockAzure);
+
+        const result = await sut.execute(new ArrayBuffer(0));
+
+        expect(result.unrecognised).toBe(true);
+    });
+
     it("Execute instructs AudD to download song from azure blob storage",  async () => {
         const sut = new SongDetector(fakeConfig, mockAxios, mockAzure);
 
@@ -55,13 +63,14 @@ const auddResponseWithTitle = (title) => ({ data: { result: { title: title } } }
 const urlsCalled = [];
 const axiosPostSucceeds = (responseObject) => ({
     post: (url) => {
-        responseObject = responseObject || auddResponseWithTitle("something");
+        responseObject = responseObject;
         urlsCalled.push(url);
         return responseObject;
     }
 });
 
 const mockAxios = axiosPostSucceeds(auddResponseWithTitle("some title"));
+const audDdoesntKnowTheSong = axiosPostSucceeds({ data: { result: { title: undefined } } });
 const mockAzure = azureUploaderThatReturns("http://some/uploaded/file/location");
 const fakeConfig = {
     "azure-account": "some-account",

@@ -12,38 +12,13 @@ class ActiveImageFramesCommand {
     }
 
     async execute(request, response) {
-        const result = await this.getActiveImageFrame(request.query.currentImageKey, parseInt(request.query.currentFrameIndex));
-        let output = result.body;
-    
-        if (this.headerForLedBytes(request) || this.queryStringOverride(request)) {        
-            const compress = this.headerForPackedRgb(request) || this.queryStringOverride(request);
-    
-            response.set("Content-Type", "text/led-bytes");
-    
-            if (compress) {
-                response.set("Content-Encoding", "packed-rgb");
-            }
-    
-            output = this._serializer.serialize(output, compress);
-            output += "\r";
-        } else {
-            response.set("Content-Type", "application/json");
-            output = JSON.stringify(output) + "\r";
-        }
-    
-        response.send(output);
-    }
-    
-    async getActiveImageFrame(clientCurrentImageKey, clientCurrentFrameIndex) {
-        const activeImageKey = await this._imageSelector.execute(this._currentSongStorage.getOrDefault());
+        const lastRecognisedSong = this._currentSongStorage.getOrDefault();
+        const activeImageKey = await this._imageSelector.getImageKeyForSong(lastRecognisedSong);
         const allFrames = await this._frameReader.execute(activeImageKey);
 
-        let frameIndex = 0;
-        if(clientCurrentImageKey == allFrames.imageKey && allFrames.frames.length > 1) {
-            frameIndex = (clientCurrentFrameIndex + 1) >= allFrames.frames.length ? 0 : clientCurrentFrameIndex + 1;
-        }
+        let frameIndex = this.generateNextFrameIndex(request.query.currentImageKey, allFrames, parseInt(request.query.currentFrameIndex));
 
-        return this.ok({
+        let output = {
             imageKey: allFrames.imageKey,
             frameCount: allFrames.frames.length,
             frameIndex: frameIndex,
@@ -51,11 +26,38 @@ class ActiveImageFramesCommand {
                 allFrames.frames[frameIndex] 
             ],
             palette: allFrames.palette,
-        });
+        };
+    
+        this.sendResponse(request, response, output);
+    }
+    
+    sendResponse(request, response, output) {
+        if (this.headerForLedBytes(request) || this.queryStringOverride(request)) {
+            const compress = this.headerForPackedRgb(request) || this.queryStringOverride(request);
+            response.set("Content-Type", "text/led-bytes");
+            
+            if (compress) {
+                response.set("Content-Encoding", "packed-rgb");
+            }
+            
+            var body = this._serializer.serialize(output, compress) + "\r";
+            response.send(body);
+            return;
+        }
+        
+        var body = JSON.stringify(output) + "\r";        
+        response.set("Content-Type", "application/json");
+        response.send(body);
     }
 
-        
-    ok (value) { return { status: 200, body: value } };
+    generateNextFrameIndex(clientCurrentImageKey, allFrames, clientCurrentFrameIndex) {
+        let frameIndex = 0;
+        if (clientCurrentImageKey == allFrames.imageKey && allFrames.frames.length > 1) {
+            frameIndex = (clientCurrentFrameIndex + 1) >= allFrames.frames.length ? 0 : clientCurrentFrameIndex + 1;
+        }
+        return frameIndex;
+    }
+
     headerForLedBytes(request)  { return request.headers["accept"] == "text/led-bytes"; };
     headerForPackedRgb(request) { return request.headers["accept-encoding"] == "packed-rgb"; };
     queryStringOverride(request) { return  request.query.shrink && request.query.shrink == "true"; }

@@ -1,9 +1,6 @@
 const cfg = require('../../config');
-const os = require('os');
 const axios = require("axios");
-const { StorageSharedKeyCredential } = require("@azure/storage-blob");
-const { BlobServiceClient } = require("@azure/storage-blob");
-const uuid = require('uuid/v1');
+const uploadToAzureBlobStorage = require("../azure-file-uploading/AzureFileUpload");
 
 class SongDetector {
     constructor(config = cfg, httpClient = axios, uploadAndReturnUrl = uploadToAzureBlobStorage) {
@@ -15,7 +12,7 @@ class SongDetector {
     async execute(bytes) {
         const url = await this._upload(this._config, bytes);
         const result = await this.pushToRecognitionApi(url);
-
+        
         if (resultDoesNotContainATitle(result)) {
             return { unrecognised: true };
         }
@@ -28,21 +25,6 @@ class SongDetector {
         return await this._httpClient.post(`https://api.audd.io/?api_token=${token}&return=timecode&url=${url}`);
     }
 }
-
-const uploadToAzureBlobStorage = async (config, bytes) => {
-    // Create correctly authenticated Azure blob storage clients.
-    const defaultAzureCredential = new StorageSharedKeyCredential(config["azure-account"], config["azure-key"]);
-    const blobServiceClient = new BlobServiceClient(config["azure-blobStorage"], defaultAzureCredential);
-    const containerClient = blobServiceClient.getContainerClient(config["azure-containerName"]);
-
-    // Generate unique filename and upload    
-    const unique = os.hostname() + "latestSongUpload";
-    const blockBlobClient = containerClient.getBlockBlobClient(unique);
-    const uploadBlobResponse = await blockBlobClient.upload(bytes, bytes.length || 0);
-
-    // Return path, with extra "cacheBust" query string part so we can reuse urls without getting cached.
-    return `${config["azure-blobStorage"]}/${config["azure-containerName"]}/${unique}?cacheBust=${Date.now()}`;
-};
 
 const resultDoesNotContainATitle = (result) => {
     return  typeof result == 'undefined' || result == null || 

@@ -1,5 +1,5 @@
 const FakeResponse = require("../test-helpers/FakeResponse");
-const InMemoryCurrentSongStorage = require("../features/song-detection/InMemoryCurrentSongStorage");
+const InMemoryCurrentSongStorage = require("../features/state-management/InMemoryCurrentSongStorage");
 const GetActiveImageCommand = require("./ActiveImageCommand");
 
 describe("MusicToImageMapper", () => {

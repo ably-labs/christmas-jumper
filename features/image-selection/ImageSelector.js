@@ -1,8 +1,9 @@
 class ImageSelector {
-    execute(mostRecentSong) {
+    getImageKeyForSong(mostRecentSong) {
         const cleaned = mostRecentSong.toLowerCase();
         const map = {
             "default": "default",
+            "frametest": "frametest",
             "have yourself a merry little christmas (remastered)": "hat",
             "have yourself a merry little christmas": "hat",
             "jingle bell rock": "bell",

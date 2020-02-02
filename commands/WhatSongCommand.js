@@ -6,9 +6,8 @@ class WhatSongCommand {
         this._songDetector = songDetector || new SongDetector();
     }
 
-    async execute(request, response) {
-        var base64byteString = request.body.bytes;
-        const byteArray = Buffer.from(base64byteString, 'base64');
+    async execute(request, response) {        
+        const byteArray = Buffer.from(request.body.bytes, 'base64');
         const potentialSong = await this._songDetector.execute(byteArray);
         
         if (potentialSong.hasOwnProperty("unrecognised")) {  

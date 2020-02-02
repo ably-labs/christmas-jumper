@@ -1,12 +1,15 @@
 const express = require("express");
 const bodyParser = require('body-parser');
 
-const InMemoryCurrentSongStorage = require("./features/song-detection/InMemoryCurrentSongStorage");
+const InMemoryCurrentSongStorage = require("./features/state-management/InMemoryCurrentSongStorage");
 const GetActiveImageCommand = require("./commands/ActiveImageCommand");
 const GetActiveImageFramesCommand = require("./commands/ActiveImageFramesCommand");
 const WhatSongCommand = require("./commands/WhatSongCommand");
 
 const state = new InMemoryCurrentSongStorage();
+const getActiveImage = new GetActiveImageCommand(state);
+const getActiveImageFrames =  new GetActiveImageFramesCommand(state);
+const whatSong =  new WhatSongCommand(state);
 
 const app = express();
 
@@ -19,9 +22,9 @@ app.use(bodyParser.json({limit: '50mb'}));
 app.use(express.static("public"));
 app.use("/", express.static(__dirname + "/public", { index: "index.html" }));
 
-app.get("/active-image", async (req, res) => await new GetActiveImageCommand(state).execute(req, res));
-app.get("/active-image-frames", async (req, res) => await new GetActiveImageFramesCommand(state).execute(req, res));
-app.post("/what-song", async  (req, res) => await new WhatSongCommand(state).execute(req, res));
+app.get("/active-image", async (req, res) => await getActiveImage.execute(req, res));
+app.get("/active-image-frames", async (req, res) => await getActiveImageFrames.execute(req, res));
+app.post("/what-song", async  (req, res) => await whatSong.execute(req, res));
 
 app["setMostRecentSong"] = (song) => { // Testing hook.
     state.save(song);
