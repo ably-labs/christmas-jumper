@@ -22,4 +22,12 @@ typedef struct
 } api_response;
 
 
+typedef struct
+{
+	int status;
+	String& headers;
+	String& body;
+} http_response;
+
+
 #endif

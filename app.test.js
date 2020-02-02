@@ -12,7 +12,7 @@ describe("The App", () => {
     });
 
     it("/active-image-frames can send non-json frames", async () => {
-        const result = await request(app).get("/active-image-frames?currentImageKey=default&raw=true");
+        const result = await request(app).get("/active-image-frames?currentImageKey=default&shrink=true");
         
         const containsBracket = result.text.indexOf("{") != -1; // lol, not json.
         expect(containsBracket).toBe(false);

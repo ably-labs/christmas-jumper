@@ -1,4 +1,5 @@
 #include <ESP8266WiFi.h>
+#include "DataStructures.h"
 #include "Networking.h"
 
 auto networking::ensure_wifi_connected(const char* const ssid, const char* const password) -> void
@@ -23,7 +24,7 @@ auto networking::ensure_wifi_connected(const char* const ssid, const char* const
 	Serial.println(F("WiFi connected"));
 }
 
-auto networking::http_get(const String& url_to_req) -> String
+auto networking::http_get(const String& url_to_req) -> http_response
 {
 	Serial.println("Requesting: " + url_to_req);
 
@@ -34,12 +35,13 @@ auto networking::http_get(const String& url_to_req) -> String
 	const auto url = without_protocol.substring(index_of_path);
 	const auto port = index_of_port != 1 ? without_protocol.substring(index_of_port + 1, index_of_path).toInt() : 80;
 	const auto host = index_of_port == -1 ? without_protocol.substring(0, index_of_path) : without_protocol.substring(0, index_of_port);
-
+	auto _ = String("");
+	
 	WiFiClient client;
 
 	if (!client.connect(host, port)) {
 		Serial.println(F("connection failed."));
-		return "";
+		return { 500, _, _ };;
 	}
 
 	client.println("GET " + url + " HTTP/1.0");
@@ -47,14 +49,14 @@ auto networking::http_get(const String& url_to_req) -> String
 	client.println(F("Connection: close"));
 	if (client.println() == 0) {
 		Serial.println(F("Failed to send request"));
-		return "";
+		return { 400, _, _ };
 	}
-
+	
 	char status[32] = { 0 };
 	client.readBytesUntil('\r', status, sizeof(status));
 	if (strcmp(status + 9, "200 OK") != 0) {
 		Serial.println(F("Status code wasn't 200."));
-		return "";
+		return { 500, _, _ };;
 	}
 
 	String response;
@@ -70,5 +72,6 @@ auto networking::http_get(const String& url_to_req) -> String
 
 	Serial.println(F("Request completed, returned:"));
 	Serial.println(body);
-	return body;
+
+	return { 200, _, body };
 }

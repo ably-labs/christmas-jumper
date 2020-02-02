@@ -30,16 +30,16 @@ auto loop() -> void
 
 	networking::ensure_wifi_connected(ssid, password);
 
-	const auto api_path = server_proto_and_host + "/active-image-frames?raw=true&currentImageKey=";
+	const auto api_path = server_proto_and_host + "/active-image-frames?shrink=true&currentImageKey=";
 	const auto url_to_req = api_path + current_image.image_key + "&currentFrameIndex=" + current_image.frame_index;
 	
 	const auto framedata = networking::http_get(url_to_req);
-	if (framedata.equals("")) {
+	if (framedata.body.equals("")) {
 		delay(default_delay);
 		return;
 	}
 
-	const auto response = api_response_parser::parse(framedata);
+	const auto response = api_response_parser::parse(framedata.body);
 	api_response_parser::copy_to(current_image, response);
 	
 	Serial.println("Displaying " + response.image_key + " at frame " + current_image.frame_index + " wth a delay of " + current_image.frame_duration);

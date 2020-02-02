@@ -28,18 +28,15 @@ app.get("/active-image", async (request, response) => {
     response.send(result.body);
 });
 
-app.get("/active-image-frames", async (request, response) => {
-    // TODO: Support etags / IfModifiedSince
-    //       This will stop us pushing too much data all the time.
-    //       If the image hasn't changed since last time, don't re-download it, just return not modified.
-    //       This will allow the hardware to play multi-frame animations without having them perma-streaming.
-    //       Consuming code has to understand unpacking json for this to work.
-    
+app.get("/active-image-frames", async (request, response) => {    
     const result = await jumperApiSingleton.getActiveImageFrame(request.query.currentImageKey, parseInt(request.query.currentFrameIndex));
     let output = result.body;
 
-    if (request.query.raw && request.query.raw == "true") {
+    if (request.query.shrink && request.query.shrink == "true") {
         const serializer = new FrameSerializer();
+        
+        response.set("Content-Type", "text/led-bytes");
+        response.set("Content-Encoding", "packed-rgb");
         output = serializer.serialize(output, true);
     }
 

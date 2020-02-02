@@ -36,7 +36,7 @@ const uploadToAzureBlobStorage = async (config, bytes) => {
     const containerClient = blobServiceClient.getContainerClient(config["azure-containerName"]);
 
     // Generate unique filename and upload    
-    const unique = os.hostname() + "latestSongUpload"; //uuid();
+    const unique = os.hostname() + "latestSongUpload";
     const blockBlobClient = containerClient.getBlockBlobClient(unique);
     const uploadBlobResponse = await blockBlobClient.upload(bytes, bytes.length || 0);
 
