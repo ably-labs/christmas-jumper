@@ -11,13 +11,12 @@ class FrameReader {
         const frameImages = this.findFramesFor(imageKey);
 
         for(let frame of frameImages) {
-            const png = await jimp.read(`./images/${frame}`);
+            const bitmapData = await jimp.read(`./images/${frame}`);
             const duration = this.establishFrameDuration(frame);
-            const frameAsBytes = this.getSingleFrameFrom(png);
-            let flattened = frameAsBytes.flat();
-
+            const frameAsBytes = this.getSingleFrameFrom(bitmapData);
+            
             frames.push({
-                b: flattened,
+                b: frameAsBytes,
                 duration: duration
             });
         }
@@ -60,25 +59,25 @@ class FrameReader {
         return  [...frameFiles];
     }
 
-    establishFrameDuration(match) {
-        const frameParts = match.split('_');
-        if (frameParts.length <= 1) {
+    establishFrameDuration(fileName) {
+        const fileNameParts = fileName.split('_');
+        if (fileNameParts.length <= 1) {
             return -1;
         }
 
-        const indexAndDuration = frameParts[1].replace(/.png/g, "");
+        const indexAndDuration = fileNameParts[1].replace(/.png/g, "");
         const indexAndDurationParts = indexAndDuration.split('-');
         return indexAndDurationParts.length === 2 ? parseInt(indexAndDurationParts[1]) : 10 * 1000;
     }
 
-    getSingleFrameFrom(image) {
+    getSingleFrameFrom(bitmapData) {
         const rows = [];
-        for (let y = 0; y < image.bitmap.height; y++) {
+        for (let y = 0; y < bitmapData.bitmap.height; y++) {
 
             let row = [];
 
-            for (let x = 0; x < image.bitmap.width; x++) {
-                const hex = image.getPixelColor(x, y);
+            for (let x = 0; x < bitmapData.bitmap.width; x++) {
+                const hex = bitmapData.getPixelColor(x, y);
                 const pixel = jimp.intToRGBA(hex);
                 let hexCode = fullColorHex(pixel.r, pixel.g, pixel.b);
                 row.push(hexCode);
@@ -91,7 +90,7 @@ class FrameReader {
             rows.push(row);
         }
 
-        return rows;
+        return rows.flat();
     }
 }
 

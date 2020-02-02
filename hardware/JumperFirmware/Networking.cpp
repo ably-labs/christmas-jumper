@@ -62,6 +62,9 @@ auto networking::http_get(const String& url_to_req, const String headers[], cons
 	
 	char status[32] = { 0 };
 	client.readBytesUntil('\r', status, sizeof(status));
+
+	Serial.println(status);
+	
 	if (strcmp(status + 9, "200 OK") != 0) {
 		Serial.println(F("Status code wasn't 200."));
 		return { 500, _, _ };;

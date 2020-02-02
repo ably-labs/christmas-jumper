@@ -1,4 +1,4 @@
-const cfg = require('../config');
+const cfg = require('../../config');
 const os = require('os');
 const axios = require("axios");
 const { StorageSharedKeyCredential } = require("@azure/storage-blob");

@@ -1,8 +1,12 @@
-const JumperApi = require("./commands/JumperApi");
-const FrameSerializer = require("./commands/FrameSerializer");
 const express = require("express");
 const bodyParser = require('body-parser');
-const serializer = new FrameSerializer();
+
+const InMemoryCurrentSongStorage = require("./features/song-detection/InMemoryCurrentSongStorage");
+const GetActiveImageCommand = require("./commands/ActiveImageCommand");
+const GetActiveImageFramesCommand = require("./commands/ActiveImageFramesCommand");
+const WhatSongCommand = require("./commands/WhatSongCommand");
+
+const state = new InMemoryCurrentSongStorage();
 
 const app = express();
 
@@ -12,57 +16,15 @@ const app = express();
 // 50mb is probably... somewhat gracious, but ¯\_(ツ)_/¯
 
 app.use(bodyParser.json({limit: '50mb'}));
-
-// Serve our front-end HTML for audio recording
-
 app.use(express.static("public"));
 app.use("/", express.static(__dirname + "/public", { index: "index.html" }));
 
-// Create instance of the Jumper API and wire it up to our Urls
-// /active-image maps to getActiveImageKey() - returns the most recently identified image-key.
-// /what-song accepts a json wrapped base64 encoded ogg-opus audio snippet from the MediaRecorder browser API
-
-const jumperApiSingleton = new JumperApi();
-
-app.get("/active-image", async (request, response) => {
-    const result = await jumperApiSingleton.getActiveImageKey();
-    response.send(result.body + "\r");
-});
-
-app.get("/active-image-frames", async (request, response) => {    
-    const result = await jumperApiSingleton.getActiveImageFrame(request.query.currentImageKey, parseInt(request.query.currentFrameIndex));
-    let output = result.body;
-
-    if (headerForLedBytes(request) || queryStringOverride(request)) {        
-        const compress = headerForPackedRgb(request) || queryStringOverride(request);
-
-        response.set("Content-Type", "text/led-bytes");
-
-        if (compress) {
-            response.set("Content-Encoding", "packed-rgb");
-        }
-
-        output = serializer.serialize(output, compress);
-        output += "\r";
-    } else {
-        response.set("Content-Type", "application/json");
-        output = JSON.stringify(output) + "\r";
-    }
-
-    response.send(output);
-});
-
-app.post("/what-song", async (request, response) => {
-    const result = await jumperApiSingleton.detectSongFromClip(request.body.bytes);
-    response.send(result);
-});
+app.get("/active-image", async (req, res) => await new GetActiveImageCommand(state).execute(req, res));
+app.get("/active-image-frames", async (req, res) => await new GetActiveImageFramesCommand(state).execute(req, res));
+app.post("/what-song", async  (req, res) => await new WhatSongCommand(state).execute(req, res));
 
 app["setMostRecentSong"] = (song) => { // Testing hook.
-    jumperApiSingleton._mostRecentSong = song;
+    state.save(song);
 };
-
-const headerForLedBytes = (request) => (request.headers["accept"] == "text/led-bytes");
-const headerForPackedRgb = (request) => (request.headers["accept-encoding"] == "packed-rgb");
-const queryStringOverride = (request) => (request.query.shrink && request.query.shrink == "true");
 
 module.exports = app;
