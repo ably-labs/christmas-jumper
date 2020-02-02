@@ -25,7 +25,7 @@ const jumperApiSingleton = new JumperApi();
 
 app.get("/active-image", async (request, response) => {
     const result = await jumperApiSingleton.getActiveImageKey();
-    response.send(result.body);
+    response.send(result.body + "\r");
 });
 
 app.get("/active-image-frames", async (request, response) => {    

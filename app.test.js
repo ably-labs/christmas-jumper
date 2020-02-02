@@ -8,7 +8,7 @@ describe("The App", () => {
         const result = await request(app).get('/active-image');
 
         expect(result.statusCode).toBe(200);
-        expect(result.text).toBe("default");
+        expect(result.text).toBe("default\r");
     });
 
     it("/active-image-frames can send non-json frames", async () => {
@@ -43,6 +43,12 @@ describe("The App", () => {
             .set("If-None-Match", etag);
 
         expect(result2.status).toBe(304);
+    });
+
+    it("/active-image always ends with a \\r because that speeds up the http client on hardware", async () => {
+        const result = await request(app).get('/active-image');
+
+        expect(result.text.endsWith("\r")).toBe(true);
     });
 
     it("/active-image-frames always ends with a \\r because that speeds up the http client on hardware", async () => {
