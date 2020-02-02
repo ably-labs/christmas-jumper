@@ -11,7 +11,7 @@
 class api_response_parser
 {
 public:
-	static api_response parse(String framedata);
+	static api_response parse(const String& framedata);
 	static void copy_to(image_identity& target, const api_response& from);
 };
 

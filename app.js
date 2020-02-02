@@ -40,7 +40,7 @@ app.get("/active-image-frames", async (request, response) => {
 
     if (request.query.raw && request.query.raw == "true") {
         const serializer = new FrameSerializer();
-        output = serializer.serialize(output);
+        output = serializer.serialize(output, true);
     }
 
     response.send(output);

@@ -1,7 +1,7 @@
 #include "ApiResponseParser.h"
 #include "StringUtils.h"
 
-api_response api_response_parser::parse(const String framedata)
+api_response api_response_parser::parse(const String& framedata)
 {
 	String parts[20]; // sure whatever.
 	string_utils::split_string_into('`', framedata, parts);

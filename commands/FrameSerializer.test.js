@@ -11,28 +11,28 @@ describe("Frame serializer", () => {
         expect(parts[2]).toBe("fi 0");
     });
 
-    it("Can correctly serialize the frame duration", () =>{
+    it("Can correctly serialize the frame duration", () => {
         const result = new FrameSerializer().serialize(validSingleFrameData);
         const parts = result.split("\`");
 
         expect(parts[4].startsWith("1000,")).toBe(true);
     });
 
-    it("Can correctly serialize the palette", () =>{
+    it("Can correctly serialize the palette", () => {
         const result = new FrameSerializer().serialize(validSingleFrameData);
         const parts = result.split("\`");
 
         expect(parts[3]).toBe("ff0000,000000");
     });
 
-    it("Can correctly serialize a single frame", () =>{
+    it("Can correctly serialize a single frame", () => {
         const result = new FrameSerializer().serialize(validSingleFrameData);
         const parts = result.split("\`");
 
         expect(parts[4]).toBe("1000,0,1");
     });
 
-    it("Can correctly serialize multiple frames", () =>{
+    it("Can correctly serialize multiple frames", () => {
         const result = new FrameSerializer().serialize(validMultipleFrameData);
         const parts = result.split("\`");
 
@@ -40,17 +40,27 @@ describe("Frame serializer", () => {
         expect(parts[5]).toBe("1000,1,0");
     });
 
-    it("Always ends the packet with a backtick", () =>{
+    it("Always ends the packet with a backtick", () => {
         const result = new FrameSerializer().serialize(validMultipleFrameData);
 
         expect(result.endsWith("\`")).toBe(true);
     });
 
-    it("Can compress pixel colours that run on", () =>{
+    it("Can compress pixel colours that run on", () => {
         const result = new FrameSerializer().serialize(frameWithCompressableImage, true);
         const parts = result.split("\`");
 
         expect(parts[4]).toBe("1000,0,1x3,2x2");
+        console.log(result);
+    });
+
+    it("Can compress pixel colours that run on, when there are multiple frames", () => {
+        const result = new FrameSerializer().serialize(multipleFrameWithCompressableImage, true);
+        const parts = result.split("\`");
+
+        expect(parts[4]).toBe("1000,0,1x3,2x2");
+        expect(parts[5]).toBe("1000,0,1x3,2x2");
+        console.log(result);
     });
 });
 
@@ -78,5 +88,16 @@ const frameWithCompressableImage = {
     frameCount: 1,
     frameIndex: 0,
     frames: [{ b: [0, 1, 1, 1, 2, 2], duration: 1000 }],
+    palette: ["ff0000", "000000", "00000e"],
+};
+
+const multipleFrameWithCompressableImage = {
+    imageKey: "default",
+    frameCount: 1,
+    frameIndex: 0,
+    frames: [
+        { b: [0, 1, 1, 1, 2, 2], duration: 1000 },
+        { b: [0, 1, 1, 1, 2, 2], duration: 1000 },
+    ],
     palette: ["ff0000", "000000", "00000e"],
 };

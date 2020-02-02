@@ -23,12 +23,12 @@ auto networking::ensure_wifi_connected(const char* const ssid, const char* const
 	Serial.println(F("WiFi connected"));
 }
 
-auto networking::http_get(const String urlToReq) -> String
+auto networking::http_get(const String& url_to_req) -> String
 {
-	Serial.println("Requesting: " + urlToReq);
+	Serial.println("Requesting: " + url_to_req);
 
-	const auto index_of_protocol = urlToReq.indexOf("://") + 3;
-	const auto without_protocol = urlToReq.substring(index_of_protocol);
+	const auto index_of_protocol = url_to_req.indexOf("://") + 3;
+	const auto without_protocol = url_to_req.substring(index_of_protocol);
 	const auto index_of_port = without_protocol.indexOf(":");
 	const auto index_of_path = without_protocol.indexOf("/");
 	const auto url = without_protocol.substring(index_of_path);
