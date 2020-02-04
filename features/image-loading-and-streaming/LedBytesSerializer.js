@@ -1,42 +1,44 @@
 class LedBytesSerializer {
+
     serialize(frameData, compress) {
         const lines = [
             frameData.imageKey,
             `fc ${frameData.frameCount}`,
             `fi ${frameData.frameIndex}`,
+            frameData.palette.join(",")
         ];
 
-        lines.push(frameData.palette.join(","));
-
-        if (typeof frameData.frames !== "undefined") {
-            for(const singleFrame of frameData.frames) {
-                lines.push(this.prepareFrame(singleFrame, compress));
-            }
+        for (const singleFrame of frameData.frames) {
+            lines.push(this.createStringRepresentationOfFrame(singleFrame, compress));
         }
 
         return lines.join('\`') + "\`";
     }
 
-
-    prepareFrame(singleFrame, foldRepeatingPixelsTogether) {
+    createStringRepresentationOfFrame(singleFrame, foldRepeatingPixelsTogether) {
         if (!foldRepeatingPixelsTogether) {
-            return singleFrame.duration + "," + singleFrame.b.join(",");
+            return `${singleFrame.duration},${singleFrame.b.join(",")}`;
         }
 
-        const pixelSequence = [];
+        const pixels = [];
         for (let bit of singleFrame.b) {
-            if(pixelSequence.length > 0 && pixelSequence[pixelSequence.length - 1].value == bit) {
-                pixelSequence[pixelSequence.length - 1].times++;
-            } else {
-                pixelSequence.push({value: bit, times: 1});
-            }
+
+            var pixel = this.bitIsSameAsLastBit(pixels, bit) 
+                ? pixels.pop() 
+                : { value: bit, times: 0 };
+
+            pixel.times++;
+            pixels.push(pixel);
         }
 
-        const pixelSequenceAsString = pixelSequence.map(b => `${b.value}x${b.times} `.replace("x1 ", "").trim());
-
-        return singleFrame.duration + "," + pixelSequenceAsString.join(",");
+        const sequence = pixels.map(b => `${b.value}x${b.times} `.replace("x1 ", "").trim());
+        return `${singleFrame.duration},${sequence.join(",")}`;
     }
     
+    bitIsSameAsLastBit(pixelSequence, bit) {
+        return pixelSequence.length > 0 && pixelSequence[pixelSequence.length - 1].value == bit;
+    }
+
     shouldSerialize(request) {
         return this.acceptsLedBytes(request) || this.shrinkParamInQueryString(request);
     }
@@ -45,7 +47,7 @@ class LedBytesSerializer {
         return this.acceptsEncodingPackedRgb(request) || this.shrinkParamInQueryString(request);
     }
 
-    acceptsLedBytes(request)  { return request.headers["accept"] == "text/led-bytes"; };
+    acceptsLedBytes(request) { return request.headers["accept"] == "text/led-bytes"; };
     acceptsEncodingPackedRgb(request) { return request.headers["accept-encoding"] == "packed-rgb"; };
     shrinkParamInQueryString(request) { return  request.query.shrink && request.query.shrink == "true"; }
 }
