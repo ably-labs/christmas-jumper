@@ -5,17 +5,14 @@ class LedBytesSerializer {
             frameData.imageKey,
             `fc ${frameData.frameCount}`,
             `fi ${frameData.frameIndex}`,
-            frameData.palette.join(",")
+            frameData.palette.join(","),
+            ...frameData.frames.map((f) => this.createSingleFrame(f, compress))
         ];
-
-        for (const singleFrame of frameData.frames) {
-            lines.push(this.createStringRepresentationOfFrame(singleFrame, compress));
-        }
 
         return lines.join('\`') + "\`";
     }
 
-    createStringRepresentationOfFrame(singleFrame, foldRepeatingPixelsTogether) {
+    createSingleFrame(singleFrame, foldRepeatingPixelsTogether) {
         if (!foldRepeatingPixelsTogether) {
             return `${singleFrame.duration},${singleFrame.b.join(",")}`;
         }

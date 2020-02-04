@@ -3,7 +3,7 @@ const FrameSerializer = require("./LedBytesSerializer");
 describe("LedBytesSerializer", () => {
     const sut = new FrameSerializer();
 
-    it("can serialize a frame to the non-json wireformat", () => {
+    it("serializes a frame to the non-json wireformat", () => {
         const result = sut.serialize(validSingleFrameData);
         const parts = result.split("\`");
 
@@ -12,28 +12,28 @@ describe("LedBytesSerializer", () => {
         expect(parts[2]).toBe("fi 0");
     });
 
-    it("can correctly serialize the frame duration", () => {
+    it("serializes the frame duration", () => {
         const result = sut.serialize(validSingleFrameData);
         const parts = result.split("\`");
 
         expect(parts[4].startsWith("1000,")).toBe(true);
     });
 
-    it("can correctly serialize the palette", () => {
+    it("serializes the palette", () => {
         const result = sut.serialize(validSingleFrameData);
         const parts = result.split("\`");
 
         expect(parts[3]).toBe("ff0000,000000");
     });
 
-    it("can correctly serialize a single frame", () => {
+    it("serializes a single frame", () => {
         const result = sut.serialize(validSingleFrameData);
         const parts = result.split("\`");
 
         expect(parts[4]).toBe("1000,0,1");
     });
 
-    it("can correctly serialize multiple frames", () => {
+    it("serializes multiple frames", () => {
         const result = sut.serialize(validMultipleFrameData);
         const parts = result.split("\`");
 
@@ -41,13 +41,13 @@ describe("LedBytesSerializer", () => {
         expect(parts[5]).toBe("1000,1,0");
     });
 
-    it("always ends the packet with a backtick", () => {
+    it("ends the packet with a backtick", () => {
         const result = sut.serialize(validMultipleFrameData);
 
         expect(result.endsWith("\`")).toBe(true);
     });
 
-    it("can compress pixel colours when they appear in sequence (e.g. 1,1,1,1 becomes 1x4)", () => {
+    it("compresses pixel colours when they appear in a sequence (e.g. 1,1,1,1 becomes 1x4)", () => {
         const result = sut.serialize(frameWithCompressableImage, true);
         const parts = result.split("\`");
 
@@ -55,7 +55,7 @@ describe("LedBytesSerializer", () => {
         console.log(result);
     });
 
-    it("can compress pixel colours when they appear in sequence, and there are multiple frames in the image", () => {
+    it("compresses pixel colours when they appear in a sequence, and there are multiple frames in the image", () => {
         const result = sut.serialize(multipleFrameWithCompressableImage, true);
         const parts = result.split("\`");
 
