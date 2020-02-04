@@ -35,7 +35,7 @@ auto networking::http_get(const String& url_to_req, const String headers[], cons
 	const auto url = without_protocol.substring(index_of_path);
 	const auto port = index_of_port != 1 ? without_protocol.substring(index_of_port + 1, index_of_path).toInt() : 80;
 	const auto host = index_of_port == -1 ? without_protocol.substring(0, index_of_path) : without_protocol.substring(0, index_of_port);
-	auto _ = String("");
+	const auto _ = String("");
 	
 	WiFiClient client;
 

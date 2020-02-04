@@ -25,8 +25,8 @@ typedef struct
 typedef struct
 {
 	int status;
-	String& headers;
-	String& body;
+	String headers;
+	String body;
 } http_response;
 
 

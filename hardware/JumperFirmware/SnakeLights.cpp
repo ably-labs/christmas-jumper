@@ -2,7 +2,7 @@
 #include "SnakeLights.h"
 
 #define PIN 4
-#define NUM_LIGHTS  256
+#define NUM_LIGHTS  64
 
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_LIGHTS, PIN, NEO_GRB + NEO_KHZ800);
 
@@ -20,6 +20,8 @@ auto hex_for_position(const String& palette, const int palette_ref) -> String
 
 void snake_lights::update_lights(const String& palette, const String& pixels)
 {
+	Serial.println(F("Updating lights."));
+	
 	auto pixel_start = pixels.indexOf(',') + 1;
 	auto pixel_number = 0;
 	bool at_end;
