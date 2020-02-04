@@ -2,7 +2,7 @@
 #include "SnakeLights.h"
 
 #define PIN 4
-#define NUM_LIGHTS  64
+#define NUM_LIGHTS  256
 
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_LIGHTS, PIN, NEO_GRB + NEO_KHZ800);
 
