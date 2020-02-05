@@ -3,12 +3,10 @@ const CachingFrameReader = require("./CachingFrameReader");
 describe("CachingFrameReader", () => {
 
     it("Will only load images from disk once", () => {
-        var called = 0;
+        let called = 0;
         const imageKey = "default";
         const nonCachingReader = {
-            loadFramesFor: () => {
-                called++;
-            }
+            loadFramesFor: () => { called++; }
         };
 
         const sut = new CachingFrameReader(nonCachingReader);
@@ -22,10 +20,9 @@ describe("CachingFrameReader", () => {
     it("Will return the same data for the same key on subsequent calls", async () => {        
         const imageKey = "default";        
         const nonCachingReader = {
-            loadFramesFor: () => {
-                return [1, 2, 3];
-            }
+            loadFramesFor: () => { return [1, 2, 3]; }
         };
+
         const sut = new CachingFrameReader(nonCachingReader);
 
         const bytes1 = sut.loadFramesFor(imageKey);

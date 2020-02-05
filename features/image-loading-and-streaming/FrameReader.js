@@ -4,13 +4,14 @@ const jimp = require("jimp");
 class FrameReader {
     constructor(snakeFrames = true) {
         this._snakeFrames = snakeFrames;
+        this._defaultFrameDuration = 10 * 1000;
     }
 
     async loadFramesFor(imageKey) {
         let frames = [];
         const frameImages = this.findFramesFor(imageKey);
 
-        for(let frame of frameImages) {
+        for (let frame of frameImages) {
             const bitmapData = await jimp.read(`./images/${frame}`);
             const duration = this.establishFrameDuration(frame);
             const frameAsBytes = this.getSingleFrameFrom(bitmapData);
@@ -28,7 +29,6 @@ class FrameReader {
         };
     }
 
-
     generatePaletteFrom(rgbFrames) {
         const allPixels = [];
         for (const frame of rgbFrames) {
@@ -41,8 +41,7 @@ class FrameReader {
     swapColoursForPaletteReferences(rgbFrames, palette) {
         for (const frame of rgbFrames) {
             for (let index in frame.b) {
-                const paletteIndex = palette.indexOf(frame.b[index]);
-                frame.b[index] = paletteIndex;
+                frame.b[index] = palette.indexOf(frame.b[index]);
             }
         }
         return rgbFrames;
@@ -64,9 +63,11 @@ class FrameReader {
             return -1;
         }
 
-        const indexAndDuration = fileNameParts[1].replace(/.png/g, "");
-        const indexAndDurationParts = indexAndDuration.split('-');
-        return indexAndDurationParts.length === 2 ? parseInt(indexAndDurationParts[1]) : 10 * 1000;
+        const indexAndDuration = fileNameParts[1].replace(/.png/g, "").split('-');
+
+        return indexAndDuration.length === 2 
+                    ? parseInt(indexAndDuration[1]) 
+                    : this._defaultFrameDuration;
     }
 
     getSingleFrameFrom(bitmapData) {
@@ -76,13 +77,14 @@ class FrameReader {
             let row = [];
 
             for (let x = 0; x < bitmapData.bitmap.width; x++) {
+
                 const hex = bitmapData.getPixelColor(x, y);
                 const pixel = jimp.intToRGBA(hex);
-                let hexCode = fullColorHex(pixel.r, pixel.g, pixel.b);
-                row.push(hexCode);
+                let hexCode = rgbToHex(pixel.r) + rgbToHex(pixel.g) + rgbToHex(pixel.b);
+                row.push(hexCode);                
             }
 
-            if (this._snakeFrames && (y % 2 != 0)) {
+            if (this._snakeFrames && (y % 2 !== 0)) {
                 row = row.reverse();
             }
 
@@ -93,19 +95,12 @@ class FrameReader {
     }
 }
 
-var rgbToHex = function (rgb) { 
-    var hex = Number(rgb).toString(16);
+const rgbToHex = function (rgb) {
+    let hex = Number(rgb).toString(16);
     if (hex.length < 2) {
-         hex = "0" + hex;
+        hex = "0" + hex;
     }
     return hex;
 };
-
-var fullColorHex = function(r,g,b) {   
-    var red = rgbToHex(r);
-    var green = rgbToHex(g);
-    var blue = rgbToHex(b);
-    return red+green+blue;
-}
 
 module.exports = FrameReader;

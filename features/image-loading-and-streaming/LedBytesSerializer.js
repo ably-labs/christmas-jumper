@@ -20,9 +20,9 @@ class LedBytesSerializer {
         const pixels = [];
         for (let bit of singleFrame.b) {
 
-            var pixel = this.bitIsSameAsLastBit(pixels, bit) 
-                ? pixels.pop() 
-                : { value: bit, times: 0 };
+            const pixel = this.bitIsSameAsLastBit(pixels, bit)
+                ? pixels.pop()
+                : {value: bit, times: 0};
 
             pixel.times++;
             pixels.push(pixel);
@@ -33,7 +33,7 @@ class LedBytesSerializer {
     }
     
     bitIsSameAsLastBit(pixelSequence, bit) {
-        return pixelSequence.length > 0 && pixelSequence[pixelSequence.length - 1].value == bit;
+        return pixelSequence.length > 0 && pixelSequence[pixelSequence.length - 1].value === bit;
     }
 
     shouldSerialize(request) {
@@ -44,9 +44,9 @@ class LedBytesSerializer {
         return this.acceptsEncodingPackedRgb(request) || this.shrinkParamInQueryString(request);
     }
 
-    acceptsLedBytes(request) { return request.headers["accept"] == "text/led-bytes"; };
-    acceptsEncodingPackedRgb(request) { return request.headers["accept-encoding"] == "packed-rgb"; };
-    shrinkParamInQueryString(request) { return  request.query.shrink && request.query.shrink == "true"; }
+    acceptsLedBytes(request) { return request.headers["accept"] === "text/led-bytes"; };
+    acceptsEncodingPackedRgb(request) { return request.headers["accept-encoding"] === "packed-rgb"; };
+    shrinkParamInQueryString(request) { return  request.query.shrink && request.query.shrink === "true"; }
 }
 
 module.exports = LedBytesSerializer;

@@ -5,10 +5,10 @@ class CachingFrameReader {
     }
 
     async loadFramesFor(imageKey) {
-        if (this._imageData.hasOwnProperty(imageKey)) {
-            return this._imageData[imageKey];
+        if (!this._imageData.hasOwnProperty(imageKey)) {
+            this._imageData[imageKey] = this._nonCachingFrameReader.loadFramesFor(imageKey);
         }
-        return this._imageData[imageKey] = this._nonCachingFrameReader.loadFramesFor(imageKey);
+        return this._imageData[imageKey];
     }
 }
 

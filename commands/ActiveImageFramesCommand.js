@@ -22,12 +22,12 @@ class ActiveImageFramesCommand {
             imageKey: allFrames.imageKey,
             frameCount: allFrames.frames.length,
             frameIndex: frameIndex,
-            frames: [ 
-                allFrames.frames[frameIndex] 
+            frames: [
+                allFrames.frames[frameIndex]
             ],
             palette: allFrames.palette,
         };
-    
+
         this.sendResponse(request, response, output);
     }
     
@@ -40,12 +40,12 @@ class ActiveImageFramesCommand {
                 response.set("Content-Encoding", "packed-rgb");
             }
             
-            var body = this._ledBytesSerializer.serialize(output, compress) + "\r";
+            const body = this._ledBytesSerializer.serialize(output, compress) + "\r";
             response.send(body);
             return;
         }
-        
-        var body = JSON.stringify(output) + "\r";        
+
+        const body = JSON.stringify(output) + "\r";
         response.set("Content-Type", "application/json");
         response.send(body);
     }
