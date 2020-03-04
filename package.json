@@ -10,7 +10,8 @@
     "start": "node server.js",
     "devserver": "nodemon --inspect server.js",
     "debug": "node --inspect server.js",
-    "test": "jest"
+    "test": "jest",
+    "tunnel": "ngrok http 12271"
   },
   "dependencies": {
     "@azure/identity": "^1.0.0",

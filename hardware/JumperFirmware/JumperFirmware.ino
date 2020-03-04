@@ -8,9 +8,9 @@
 #include <avr/power.h>
 #endif
 
-const char* ssid = "asgard_router1";
-const char* password = "godhatesfangs";
-const String server_proto_and_host = "http://192.168.1.75:12271";
+const char* ssid =  "david"; // "ilikepie";
+const char* password = "stephens"; //"Goldfish54!";
+const String server_proto_and_host = "http://2f6418d4.ngrok.io:80";
 
 image_identity current_image = { "_", -1, default_delay };
 
@@ -19,6 +19,7 @@ auto setup() -> void
 	snake_lights::init();
 
 	Serial.begin(115200);
+  Serial.println('setup');
 	delay(1000);
 
 	networking::ensure_wifi_connected(ssid, password);

@@ -53,8 +53,15 @@ void snake_lights::update_lights(const String& palette, const String& pixels)
 		hex_for_position(palette, palette_ref).toCharArray(hex_code, 6, 0);
 		sscanf(hex_code, "%02x%02x%02x", &r, &g, &b);
 
+		Serial.print(pixel_number);
+		Serial.print(F(" to "));
+		Serial.print(pixel_number + times);
+		Serial.print(F(" = "));
+		Serial.print(hex_code);
+		Serial.println("");
+
 		for (auto i = 0; i < times; i++)
-		{			
+		{
 			strip.setPixelColor(pixel_number, Adafruit_NeoPixel::Color(r, g, b));
 			pixel_number++;
 		}

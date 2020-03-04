@@ -7,7 +7,7 @@ class ActiveImageFramesCommand {
     constructor(currentSongStorage, imageSelector, frameReader) {
         this._currentSongStorage = currentSongStorage;
         this._imageSelector = imageSelector || new ImageSelector();
-        this._frameReader = frameReader || new CachingFrameReader(new FrameReader());
+        this._frameReader = frameReader || new FrameReader(); // new CachingFrameReader(new FrameReader());
         this._ledBytesSerializer = new LedBytesSerializer();
     }
 

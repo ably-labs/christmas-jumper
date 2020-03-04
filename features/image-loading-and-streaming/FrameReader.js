@@ -90,7 +90,7 @@ class FrameReader {
 
             rows.push(row);
         }
-
+        
         return rows.flat();
     }
 }
