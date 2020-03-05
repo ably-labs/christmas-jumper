@@ -3,7 +3,6 @@
 #include "ApiResponseParser.h"
 #include "SnakeLights.h"
 #include "Networking.h"
-#include <ESP8266WiFi.h>
 #ifdef __AVR__
 #include <avr/power.h>
 #endif
@@ -19,7 +18,6 @@ auto setup() -> void
 	snake_lights::init();
 
 	Serial.begin(115200);
-  Serial.println('setup');
 	delay(1000);
 
 	networking::ensure_wifi_connected(ssid, password);
