@@ -3,7 +3,7 @@
 #else
 #include <ESP8266WiFi.h>
 #endif
-
+#include "Console.h"
 #include "DataStructures.h"
 #include "Networking.h"
 
@@ -11,13 +11,12 @@ auto networking::ensure_wifi_connected(const char* const ssid, const char* const
 {
 	if (WiFi.status() == WL_CONNECTED)
 	{
-		Serial.println(F("WiFi already connected."));
+		console::log(F("WiFi already connected."));
 		return;
 	}
 
-	Serial.print(F("Connecting to "));
-	Serial.print(ssid);
-	Serial.println();
+	console::log(F("Connecting to "));
+	console::log(ssid);
 
 	WiFi.begin(ssid, password);
 
@@ -26,12 +25,12 @@ auto networking::ensure_wifi_connected(const char* const ssid, const char* const
 		Serial.print(".");
 	}
 
-	Serial.println(F("WiFi connected"));
+	console::log(F("WiFi connected"));
 }
 
 auto networking::http_get(const String& url_to_req, const String headers[], const int header_count) -> http_response
 {
-	Serial.println("Requesting: " + url_to_req);
+	console::log("Requesting: " + url_to_req);
 
 	const auto index_of_protocol = url_to_req.indexOf("://") + 3;
 	const auto without_protocol = url_to_req.substring(index_of_protocol);
@@ -51,11 +50,11 @@ auto networking::http_get(const String& url_to_req, const String headers[], cons
 	WiFiClient client;
 
 	if (!client.connect(hostStr, port)) {
-		Serial.println(F("connection failed."));
+		console::log(F("connection failed."));
 		return { 500, _, _ };;
 	}
 
-	Serial.println(F("Connected."));
+	console::log(F("Connected."));
 
 	client.println("GET " + url + " HTTP/1.0");
 	client.println("Host: " + host);
@@ -74,10 +73,10 @@ auto networking::http_get(const String& url_to_req, const String headers[], cons
 	char status[32] = { 0 };
 	client.readBytesUntil('\r', status, sizeof(status));
 
-	Serial.println(status);
+	console::debug(status);
 
 	if (strcmp(status + 9, "200 OK") != 0) {
-		Serial.println(F("Status code wasn't 200."));
+		console::log(F("Status code wasn't 200."));
 		return { 500, _, _ };;
 	}
 
@@ -92,8 +91,9 @@ auto networking::http_get(const String& url_to_req, const String headers[], cons
 	auto body = response.substring(index_of_close + delimiter.length());
 	body.trim();
 
-	Serial.println(F("Request completed, returned:"));
-	Serial.println(body);
+	console::log(F("Request completed."));
+	console::log(F("Returned:"));
+	console::log(body);
 
 	return { 200, _, body };
 }

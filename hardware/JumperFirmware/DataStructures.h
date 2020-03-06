@@ -13,6 +13,7 @@ typedef struct
 
 typedef struct
 {
+	bool loaded;
 	String image_key;
 	long total_frames;
 	long frame_index;
@@ -20,7 +21,6 @@ typedef struct
 	String palette;
 	String pixels;
 } api_response;
-
 
 typedef struct
 {

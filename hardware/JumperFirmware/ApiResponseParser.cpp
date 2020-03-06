@@ -6,6 +6,7 @@ api_response api_response_parser::parse(const String& framedata)
 	String parts[20]; // sure whatever.
 	string_utils::split_string_into('`', framedata, parts);
 	const api_response response = {
+		true,
 		parts[0], 												// image_key
 		parts[1].substring(2).toInt(), 							// total_frames
 		parts[2].substring(2).toInt(), 							// frame_index
@@ -14,6 +15,11 @@ api_response api_response_parser::parse(const String& framedata)
 		parts[4]  												// first frame pixels
 	};	
 	return response;
+}
+
+api_response api_response_parser::invalid_response()
+{
+	return { false,"", -1, -1, -1, "", "" };
 }
 
 void api_response_parser::copy_to(image_identity& target, const api_response& from)

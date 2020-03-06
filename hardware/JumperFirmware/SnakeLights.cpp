@@ -1,5 +1,6 @@
 #include <Adafruit_NeoPixel.h>
 #include "SnakeLights.h"
+#include "Console.h"
 
 #define PIN 4
 #define NUM_LIGHTS  256
@@ -20,7 +21,7 @@ auto hex_for_position(const String& palette, const int palette_ref) -> String
 
 void snake_lights::update_lights(const String& palette, const String& pixels)
 {
-	Serial.println(F("Updating lights."));
+	console::log(F("Updating lights."));
 	
 	auto pixel_start = pixels.indexOf(',') + 1;
 	auto pixel_number = 0;
@@ -53,12 +54,12 @@ void snake_lights::update_lights(const String& palette, const String& pixels)
 		hex_for_position(palette, palette_ref).toCharArray(hex_code, 6, 0);
 		sscanf(hex_code, "%02x%02x%02x", &r, &g, &b);
 
-		Serial.print(pixel_number);
-		Serial.print(F(" to "));
-		Serial.print(pixel_number + times);
-		Serial.print(F(" = "));
-		Serial.print(hex_code);
-		Serial.println("");
+		console::debug(pixel_number);
+		console::debug(F(" to "));
+		console::debug(pixel_number + times);
+		console::debug(F(" = "));
+		console::debug(hex_code);
+		console::debug("\r\n");
 
 		for (auto i = 0; i < times; i++)
 		{
@@ -70,7 +71,7 @@ void snake_lights::update_lights(const String& palette, const String& pixels)
 
 	strip.show();
 
-	Serial.println(F("Lights set"));
+	console::log(F("Lights set"));
 }
 
 void snake_lights::error_lights()

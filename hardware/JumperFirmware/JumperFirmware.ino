@@ -1,4 +1,8 @@
-#include "StringUtils.h"
+// #define DEBUG // Uncomment this line to enable diagnostic debug
+#include "MqttPixelProvider.h"
+#include "HttpApiPixelProvider.h"
+#include "PixelProvider.h"
+#include "Console.h"
 #include "DataStructures.h"
 #include "ApiResponseParser.h"
 #include "SnakeLights.h"
@@ -7,14 +11,18 @@
 #include <avr/power.h>
 #endif
 
-const char* ssid =  "david"; // "ilikepie";
-const char* password = "stephens"; //"Goldfish54!";
-const String server_proto_and_host = "http://2f6418d4.ngrok.io:80";
+const char* ssid = "asgard_router1"; //  "david"; // "ilikepie";
+const char* password = "godhatesfangs"; // "stephens"; //"Goldfish54!";
 
 image_identity current_image = { "_", -1, default_delay };
 
+pixel_provider* provider;
+mqtt_pixel_provider mqtt;
+http_api_pixel_provider http;
+
 auto setup() -> void
 {
+	provider = &http;
 	snake_lights::init();
 
 	Serial.begin(115200);
@@ -25,32 +33,26 @@ auto setup() -> void
 
 auto loop() -> void
 {
-	Serial.println(F("Loop()"));
+	console::log(F("Loop()"));
 
 	networking::ensure_wifi_connected(ssid, password);
 
-	const auto api_path = server_proto_and_host + "/active-image-frames?currentImageKey=";
-	const auto url_to_req = api_path + current_image.image_key + "&currentFrameIndex=" + current_image.frame_index;
-
-	const String headers[2] = {
-		F("Accept: text/led-bytes"),
-		F("Accept-Encoding: packed-rgb")
-	};
-	
-	const auto framedata = networking::http_get(url_to_req, headers, 2);
-	
-	if (framedata.body.equals("")) {
+	const auto response = provider->get_image_data(current_image);
+	if (response.loaded == false)
+	{
+		console::log(F("No data loaded from provider."));
 		delay(default_delay);
 		return;
 	}
-
-	const auto response = api_response_parser::parse(framedata.body);
+	
 	api_response_parser::copy_to(current_image, response);
 	
-	Serial.println("Displaying " + response.image_key + " at frame " + current_image.frame_index + " wth a delay of " + current_image.frame_duration);
-			
+	console::log("Displaying " + response.image_key + " at frame " + current_image.frame_index + " wth a delay of " + current_image.frame_duration);
+
 	snake_lights::update_lights(response.palette, response.pixels);
+
+	console::log(F("Waiting for: "));
+	console::log(current_image.frame_duration);
 	
 	delay(current_image.frame_duration);
-	Serial.println(F("Finished waiting."));
 }
