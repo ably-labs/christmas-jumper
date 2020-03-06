@@ -8,12 +8,12 @@
 #else
 	#include "WProgram.h"
 #endif
-#include "ApiResponseParser.h"
+#include "DataStructures.h"
 #include "PixelProvider.h"
 
 class http_api_pixel_provider final : public pixel_provider {
 public:
-	api_response get_image_data(image_identity& current_image) override;
+	api_response get_image_data(image_identity* current_image_ptr) override;
 };
 
 #endif

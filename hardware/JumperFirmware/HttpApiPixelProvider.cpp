@@ -1,11 +1,11 @@
 #include "HttpApiPixelProvider.h"
 #include "Networking.h"
 
-api_response http_api_pixel_provider::get_image_data(image_identity& current_image)
+api_response http_api_pixel_provider::get_image_data(image_identity* current_image_ptr)
 {
-	const String server_proto_and_host = "http://192.168.1.75:12271";
+	const auto server_proto_and_host = cfg_->http_root;
 	const auto api_path = server_proto_and_host + "/active-image-frames?currentImageKey=";
-	const auto url_to_req = api_path + current_image.image_key + "&currentFrameIndex=" + current_image.frame_index;
+	const auto url_to_req = api_path + current_image_ptr->image_key + "&currentFrameIndex=" + current_image_ptr->frame_index;
 
 	const String headers[2] = {
 		F("Accept: text/led-bytes"),

@@ -5,6 +5,15 @@ constexpr auto default_delay = 1000;
 
 typedef struct
 {
+	const char* ssid;
+	const char* password;
+	String http_root;
+	bool use_http;
+} configuration;
+
+
+typedef struct
+{
 	String image_key;
 	int frame_index;
 	int frame_duration;
