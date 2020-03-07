@@ -2,10 +2,11 @@
 #define _APIRESPONSEPARSER_h
 
 #if defined(ARDUINO) && ARDUINO >= 100
-	#include "arduino.h"
+#include "arduino.h"
 #else
-	#include "WProgram.h"
+#include "WProgram.h"
 #endif
+
 #include "DataStructures.h"
 
 class api_response_parser

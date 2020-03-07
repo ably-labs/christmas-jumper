@@ -1,5 +1,3 @@
-// Console.h
-
 #ifndef _CONSOLE_h
 #define _CONSOLE_h
 

@@ -1,6 +1,12 @@
 #ifndef _DATASTRUCTURES_h
 #define _DATASTRUCTURES_h
 
+#if defined(ARDUINO) && ARDUINO >= 100
+#include "arduino.h"
+#else
+#include "WProgram.h"
+#endif
+
 constexpr auto default_delay = 1000;
 
 typedef struct

@@ -1,5 +1,3 @@
-// Networking.h
-
 #ifndef _NETWORKING_h
 #define _NETWORKING_h
 
