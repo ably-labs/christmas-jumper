@@ -49,7 +49,7 @@ auto loop() -> void
 	networking::ensure_wifi_connected(cfg.ssid, cfg.password);
 
 	const auto response = provider->get_image_data(&current_image);
-	if (response.loaded == false)
+	if (!response.loaded)
 	{
 		console::log(F("No data loaded from provider."));
 		delay(default_delay);
