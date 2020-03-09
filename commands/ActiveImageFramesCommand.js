@@ -15,7 +15,7 @@ class ActiveImageFramesCommand {
         const lastRecognisedSong = this._currentSongStorage.getOrDefault();
         const activeImageKey = await this._imageSelector.getImageKeyForSong(lastRecognisedSong);
         const allFrames = await this._frameReader.loadFramesFor(activeImageKey);
-
+        
         let frameIndex = this.generateNextFrameIndex(request.query.currentImageKey, allFrames, parseInt(request.query.currentFrameIndex));
 
         let output = {

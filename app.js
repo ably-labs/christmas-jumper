@@ -1,19 +1,6 @@
 const express = require("express");
 const bodyParser = require('body-parser');
-
-const InMemoryCurrentSongStorage = require("./features/state-management/InMemoryCurrentSongStorage");
-const GetActiveImageCommand = require("./commands/ActiveImageCommand");
-const GetActiveImageFramesCommand = require("./commands/ActiveImageFramesCommand");
-const WhatSongCommand = require("./commands/WhatSongCommand");
-
-// This state object holds the last song. 
-// Could be replaced with some other persistence (disk, distributed cache, etc)
-const state = new InMemoryCurrentSongStorage();
-
-// Create the three command handlers that all share the same state object
-const getActiveImage = new GetActiveImageCommand(state);
-const getActiveImageFrames =  new GetActiveImageFramesCommand(state);
-const whatSong =  new WhatSongCommand(state);
+const commandHandlers = require("./handlerFactory");
 
 const app = express();
 
@@ -28,12 +15,12 @@ app.use(express.static("public"));
 app.use("/", express.static(__dirname + "/public", { index: "index.html" }));
 
 // Map routes to handlers
-app.get("/active-image", async (req, res) => await getActiveImage.execute(req, res));
-app.get("/active-image-frames", async (req, res) => await getActiveImageFrames.execute(req, res));
-app.post("/what-song", async  (req, res) => await whatSong.execute(req, res));
+app.get("/active-image", async (req, res) => await commandHandlers.getActiveImage.execute(req, res));
+app.get("/active-image-frames", async (req, res) => await commandHandlers.getActiveImageFrames.execute(req, res));
+app.post("/what-song", async  (req, res) => await commandHandlers.whatSong.execute(req, res));
 
 app["setMostRecentSong"] = (song) => { // Testing hook.
-    state.save(song);
+    commandHandlers.state.save(song);
 };
 
 module.exports = app;

@@ -39,4 +39,39 @@ describe("WhatSongCommand handler", () => {
 
         expect(storage.get()).toBe("some detected song");
     });
+        
+    it("adds flag indicating song has changed in response, when song changes",  async () => {
+        storage.save("initial song");
+
+        const songDetector = { "execute": () => { return "different song" } };        
+        const sut = new WhatSongCommand(storage, songDetector);
+
+        await sut.execute({ body: { bytes: "" } }, response);
+
+        expect(response.lastSentResponse().songChanged).toBeTruthy();
+    });
+        
+    it("does not call onSongChanged when the song remains the same",  async () => {
+        var songWasChanged = false;
+        storage.save("song remains the same");
+
+        const songDetector = { "execute": () => { return "song remains the same" } };        
+        const sut = new WhatSongCommand(storage, songDetector, () => { songWasChanged = true;  });
+
+        await sut.execute({ body: { bytes: "" } }, response);
+
+        expect(songWasChanged).toBe(false);
+    });
+        
+    it("calls onSongChanged callback when song has changed.",  async () => {
+        var songWasChanged = false;
+        storage.save("initial song");
+
+        const songDetector = { "execute": () => { return "different song" } };        
+        const sut = new WhatSongCommand(storage, songDetector, () => { songWasChanged = true; });
+
+        await sut.execute({ body: { bytes: "" } }, response);
+
+        expect(songWasChanged).toBe(true);
+    });
 });
