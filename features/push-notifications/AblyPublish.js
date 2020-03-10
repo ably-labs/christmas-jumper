@@ -23,8 +23,6 @@ class AblyConnector {
         this._client.subscribe('jumper');
         this._client.publish('jumper', output);
         this._client.subscribe('jumper');
-
-        return output;
     }
 }
 
