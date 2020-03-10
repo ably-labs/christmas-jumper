@@ -11,7 +11,8 @@
     "devserver": "nodemon --inspect server.js",
     "debug": "node --inspect server.js",
     "test": "jest",
-    "tunnel": "ngrok http 12271"
+    "tunnel": "ngrok http 12271",
+    "mqtt": "nodemon --inspect mqtt-receiver.js"
   },
   "dependencies": {
     "@azure/identity": "^1.0.0",
@@ -43,6 +44,7 @@
     "jest": "^24.9.0",
     "jest-cli": "^25.1.0",
     "jest-each": "^24.9.0",
+    "mqtt": "^3.0.0",
     "nodemon": "^1.19.4",
     "supertest": "^4.0.2"
   }
