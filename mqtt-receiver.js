@@ -20,10 +20,8 @@ client.on('connect', function () {
 });
 
 client.on('message', function (topic, message) {
-  // message is Buffer
-  console.log(topic)
-  console.log(message.toString())
-  client.end()
+  console.log(topic, message.toString())
+
 });
 
 app.get("/status", (req, res) => {

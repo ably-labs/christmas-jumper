@@ -3,14 +3,17 @@ const AblyConnector = require("./AblyPublish");
 
 describe("Ably push notifications", () => {
 
-    let sut, fakeAbly, ablyChannel;
+    let sut, ably;
     let publishedData = null;
     beforeEach(() => {
-        ablyChannel = { publish: (event, data) => { publishedData = data; } };
-        fakeAbly = { channels: { get: () => { return ablyChannel; } } };
-        // const Ably = require("ably");
-        // const realAbly = Ably.Realtime(config["ably-api-key"]);
-        sut = new AblyConnector(fakeAbly);
+        ably = {  
+            subscribe: () => {  },
+            end: () => {  },
+            publish: (event, data) => { publishedData = data; },
+        };
+        
+        //ably = createRealMqttClient();
+        sut = new AblyConnector(ably);
     });
 
     it("Publishes compressed image payload", async () => {
@@ -19,4 +22,12 @@ describe("Ably push notifications", () => {
         expect(publishedData).toBe("default`fc 1`fi -1`ff0000,000000`-1,0,1x255`");
     });
 
+    function createRealMqttClient() {
+        const mqtt = require("mqtt");
+        const creds = config["ably-api-key"].split(':');        
+        return mqtt.connect("mqtts://mqtt.ably.io", {
+            username: creds[0],
+            password: creds[1]
+        }); 
+    }
 });

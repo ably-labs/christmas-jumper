@@ -12,7 +12,7 @@
     "debug": "node --inspect server.js",
     "test": "jest",
     "tunnel": "ngrok http 12271",
-    "mqtt": "nodemon --inspect mqtt-receiver.js"
+    "mqtt": "node --inspect mqtt-receiver.js"
   },
   "dependencies": {
     "@azure/identity": "^1.0.0",
