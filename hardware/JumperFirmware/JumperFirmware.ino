@@ -15,7 +15,11 @@ configuration cfg = {
 	"asgard_router1", //  "david"; // "ilikepie";
 	"godhatesfangs", // "stephens"; //"Goldfish54!";
 	"http://192.168.1.75:12271",
-	false
+	false,
+  "mqtt.ably.io",
+  8883,
+  "3SwaWA.eWNKzg",
+  "iDGSDjPS1oSrYmXR"
 };
 
 pixel_provider* provider;

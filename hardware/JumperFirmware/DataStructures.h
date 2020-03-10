@@ -15,6 +15,10 @@ typedef struct
 	const char* password;
 	String http_root;
 	bool use_http;
+  const char* mqttServer;
+  const int mqttPort;
+  const char* mqttUser;
+  const char* mqttPassword;  
 } configuration;
 
 
