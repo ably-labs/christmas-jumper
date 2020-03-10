@@ -7,11 +7,11 @@ const mqtt = require("mqtt");
 
 class AblyConnector {
 
-    constructor(ablyClient) {
+    constructor(connectedMqttClient) {
         this._imageSelector = new ImageSelector();
         this._frameReader = new FrameReader();
         this._ledBytesSerializer = new LedBytesSerializer();
-        this._client = ablyClient;       
+        this._client = connectedMqttClient;       
     }
 
     async publishToAbly(lastRecognisedSong) {
@@ -22,7 +22,7 @@ class AblyConnector {
 
         this._client.subscribe('jumper');
         this._client.publish('jumper', output);
-        this._client.end();
+        this._client.subscribe('jumper');
 
         return output;
     }

@@ -22,6 +22,13 @@ describe("Ably push notifications", () => {
         expect(publishedData).toBe("default`fc 1`fi -1`ff0000,000000`-1,0,1x255`");
     });
 
+    it("Publishes compressed image payload successfully more than once", async () => {
+        await sut.publishToAbly("default");
+        await sut.publishToAbly("default");
+
+        expect(publishedData).toBe("default`fc 1`fi -1`ff0000,000000`-1,0,1x255`");
+    });
+
     function createRealMqttClient() {
         const mqtt = require("mqtt");
         const creds = config["ably-api-key"].split(':');        
