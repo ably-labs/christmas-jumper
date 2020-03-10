@@ -1,17 +1,18 @@
-//#define MQTTEnabled
 #include "MqttPixelProvider.h"
-
-#if defined(MQTTEnabled)
-
+#include <ssl_client.h>
+#include <WiFiClientSecure.h>
 #include <PubSubClient.h>
 
-PubSubClient client;
+WiFiClientSecure espClient;
+PubSubClient client(espClient);
+
 String lastMessage;
 
-const char* mqttServer = "test.mosquitto.org";
-const int mqttPort = 1883;
-const char* mqttUser = "";
-const char* mqttPassword = "";
+const char* mqttServer = "mqtt.ably.io";
+const int mqttPort = 8883;
+const char* mqttUser = "3SwaWA.eWNKzg";
+const char* mqttPassword = "iDGSDjPS1oSrYmXR";
+
 
 mqtt_pixel_provider::mqtt_pixel_provider() {
 
@@ -19,52 +20,47 @@ mqtt_pixel_provider::mqtt_pixel_provider() {
 
 void reconnect()
 {
-	client.setServer(mqttServer, mqttPort);
-	// Loop until we're reconnected
-	while (!client.connected()) {
-		Serial.print("Attempting MQTT connection...");
-		// Create a random client ID
-		String client_id = "ESP32Client-";
-		client_id += String(random(0xffff), HEX);
-		// Attempt to connect
-		if (client.connect(client_id.c_str(), mqttUser, mqttPassword)) {
-			Serial.println("connected");
-			client.publish("/icircuit/presence/ESP32/", "hello world");
-			// ... and resubscribe
-			//client.subscribe(MQTT_SERIAL_RECEIVER_CH);
-		}
-		else {
-			Serial.print("failed, rc=");
-			Serial.print(client.state());
-			Serial.println(" try again in 5 seconds");
-			delay(5000);
-		}
-	}
+  // Loop until we're reconnected
+  while (!client.connected()) {
+    Serial.print("Attempting MQTT connection...");
+    // Attempt to connect
+    if (client.connect("arduinoClient", mqttUser, mqttPassword)) {
+      Serial.println("connected");
+      // Once connected, publish an announcement...
+      client.publish("jumper","hello world");
+      // ... and resubscribe
+      client.subscribe("jumper");
+    } else {
+      Serial.print("failed, rc=");
+      Serial.print(client.state());
+      Serial.println(" try again in 5 seconds");
+      // Wait 5 seconds before retrying
+      delay(5000);
+    }
+  }
 }
 
 void callback(char* topic, byte* payload, unsigned int length) {
-	Serial.println("-------new message from broker-----");
-	Serial.print("channel:");
-	Serial.println(topic);
-	Serial.print("data:");
-	Serial.write(payload, length);
-	Serial.println();
+  Serial.print("Message arrived [");
+  Serial.print(topic);
+  Serial.print("] ");
+  for (int i=0;i<length;i++) {
+    Serial.print((char)payload[i]);
+  }
+  Serial.println();
 	lastMessage = "something arrived";
 }
-#endif
 
 api_response mqtt_pixel_provider::get_image_data(image_identity* current_image_ptr)
 {
-
-#if defined(MQTTEnabled)
 	if (!client.connected())
 	{
-		client.setServer(mqttServer, mqttPort);
-		client.setCallback(callback);
+    client.setServer(mqttServer, mqttPort);
+    client.setCallback(callback);
 		reconnect();
 	}
-#endif
-
-	
+ 
+  client.loop();
+ 
 	return invalid_api_response();
 }

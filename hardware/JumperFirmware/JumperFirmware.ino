@@ -15,7 +15,7 @@ configuration cfg = {
 	"asgard_router1", //  "david"; // "ilikepie";
 	"godhatesfangs", // "stephens"; //"Goldfish54!";
 	"http://192.168.1.75:12271",
-	true
+	false
 };
 
 pixel_provider* provider;
@@ -44,14 +44,13 @@ auto setup() -> void
 
 auto loop() -> void
 {
-	console::log(F("Loop()"));
+	// console::log(F("Loop()"));
 
 	networking::ensure_wifi_connected(cfg.ssid, cfg.password);
 
 	const auto response = provider->get_image_data(&current_image);
 	if (!response.loaded)
 	{
-		console::log(F("No data loaded from provider."));
 		delay(default_delay);
 		return;
 	}

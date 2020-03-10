@@ -10,8 +10,7 @@
 auto networking::ensure_wifi_connected(const char* const ssid, const char* const password) -> void
 {
 	if (WiFi.status() == WL_CONNECTED)
-	{
-		console::log(F("WiFi already connected."));
+	{		
 		return;
 	}
 
