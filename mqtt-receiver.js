@@ -1,4 +1,8 @@
 // This is for dev-testing only.
+// Run this as npm run mqtt
+// And watch it for published messages as you publish
+// to the correct topic from the app.
+
 const mqtt = require('mqtt')
 const express = require("express");
 const app = express();
@@ -21,12 +25,9 @@ client.on('connect', function () {
 
 client.on('message', function (topic, message) {
   console.log(topic, message.toString())
-
 });
 
-app.get("/status", (req, res) => {
-    res.write({status: "ok"});
-});
+app.get("/status", (req, res) => res.write({status: "ok"}));
 
 const port = process.env.PORT || 12270;
 const listener = app.listen(port, function() {
