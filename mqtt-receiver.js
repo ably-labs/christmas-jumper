@@ -18,7 +18,7 @@ var client  = mqtt.connect("mqtts://mqtt.ably.io", {
 client.on('connect', function () {
   client.subscribe('jumper', function (err) {
     if (!err) {
-      client.publish('jumper', 'default`fc 1`fi -1`ff0000,000000`-1,0,1x255`')
+      client.publish('jumper', 'connected');
     }
   })
 });

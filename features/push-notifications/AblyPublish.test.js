@@ -1,18 +1,16 @@
 const config = require("../../config");
+const Ably = require("ably");
 const AblyConnector = require("./AblyPublish");
 
 describe("Ably push notifications", () => {
 
-    let sut, ably, publishedData;
+    let sut, ably, channel, publishedData;
     beforeEach(() => {
         publishedData = [];
-        ably = {  
-            subscribe: () => {  },
-            end: () => {  },
-            publish: (event, data) => { publishedData.push(data); },
-        };
+        channel = { publish: (event, data) => { publishedData.push(data); } };
+        ably = { channels: { get: () => channel } };
         
-        //ably = createRealMqttClient();
+        // ably = new Ably.Realtime(config["ably-api-key"]);
         sut = new AblyConnector(ably);
     });
 
@@ -29,13 +27,4 @@ describe("Ably push notifications", () => {
         expect(publishedData[0]).toBe("default`fc 1`fi -1`ff0000,000000`-1,0,1x255`");
         expect(publishedData[1]).toBe("default`fc 1`fi -1`ff0000,000000`-1,0,1x255`");
     });
-
-    function createRealMqttClient() {
-        const mqtt = require("mqtt");
-        const creds = config["ably-api-key"].split(':');        
-        return mqtt.connect("mqtts://mqtt.ably.io", {
-            username: creds[0],
-            password: creds[1]
-        }); 
-    }
 });

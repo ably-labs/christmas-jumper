@@ -3,6 +3,7 @@ const InMemoryCurrentSongStorage = require("./features/state-management/InMemory
 const GetActiveImageCommand = require("./commands/ActiveImageCommand");
 const GetActiveImageFramesCommand = require("./commands/ActiveImageFramesCommand");
 const WhatSongCommand = require("./commands/WhatSongCommand");
+const Ably = require("ably");
 const AblyPublish = require("./features/push-notifications/AblyPublish");
 
 
@@ -24,20 +25,10 @@ if (config["enable-push"]) {
             return;
         }
 
-        ablyClient = ablyClient || createMqttClient();
+        ablyClient = ablyClient || new Ably.Realtime(config["ably-api-key"]);
         ablyPublish = ablyPublish || new AblyPublish(state, ablyClient);
         await ablyPublish.publishToAbly(newSongTitle);
-    }; 
-
-}
-
-function createMqttClient() {
-    const mqtt = require("mqtt");
-    const creds = config["ably-api-key"].split(':');        
-    return mqtt.connect("mqtts://mqtt.ably.io", {
-        username: creds[0],
-        password: creds[1]
-    }); 
+    };
 }
 
 module.exports = {
