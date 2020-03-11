@@ -12,10 +12,12 @@
 #endif
 
 configuration cfg = {
-	"asgard_router1", //  "david"; // "ilikepie";
-	"godhatesfangs", // "stephens"; //"Goldfish54!";
-	"http://192.168.1.75:12271",
-	false,
+	//"asgard_router1", //  "david"; //
+	"ilikepie",
+	//"godhatesfangs", // "stephens"; //
+	"Goldfish54!",
+	"http://5f184016.ngrok.io:80",
+	true,
   "mqtt.ably.io",
   8883,
   "3SwaWA.eWNKzg",
@@ -39,11 +41,13 @@ auto setup() -> void
 	provider->set_config(&cfg);
 	
 	snake_lights::init();
+  snake_lights::update_lights("ff0000,000000", "-1,0,1x255");
 
 	Serial.begin(115200);
 	delay(1000);
 
-	networking::ensure_wifi_connected(cfg.ssid, cfg.password);
+	networking::ensure_wifi_connected(cfg.ssid, cfg.password);  
+  snake_lights::update_lights("00ff00,000000", "-1,0,1x255");
 }
 
 auto loop() -> void
@@ -62,7 +66,7 @@ auto loop() -> void
 	api_response_parser::copy_to(current_image, response);
 	
 	console::log("Displaying " + response.image_key + " at frame " + current_image.frame_index + " wth a delay of " + current_image.frame_duration);
-
+  
 	snake_lights::update_lights(response.palette, response.pixels);
 	delay(current_image.frame_duration);
 }

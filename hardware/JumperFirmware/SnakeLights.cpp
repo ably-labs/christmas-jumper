@@ -2,7 +2,12 @@
 #include "SnakeLights.h"
 #include "Console.h"
 
+#if defined(ESP32)
+#define PIN 21
+#else
 #define PIN 4
+#endif
+
 #define NUM_LIGHTS  256
 
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_LIGHTS, PIN, NEO_GRB + NEO_KHZ800);
@@ -16,7 +21,8 @@ void snake_lights::init()
 auto hex_for_position(const String& palette, const int palette_ref) -> String
 {
 	const auto palette_offset = (6 * palette_ref) + palette_ref;
-	return palette.substring(palette_offset, palette_offset + 6);
+	const auto substr = palette.substring(palette_offset, palette_offset + 6);
+  return substr;
 }
 
 void snake_lights::update_lights(const String& palette, const String& pixels)
@@ -51,19 +57,22 @@ void snake_lights::update_lights(const String& palette, const String& pixels)
 		char hex_code[6];
 		int r, g, b = 0;
 		
-		hex_for_position(palette, palette_ref).toCharArray(hex_code, 6, 0);
+		hex_for_position(palette, palette_ref).toCharArray(hex_code, 6);
 		sscanf(hex_code, "%02x%02x%02x", &r, &g, &b);
-
-		console::debug(pixel_number);
-		console::debug(F(" to "));
-		console::debug(pixel_number + times);
-		console::debug(F(" = "));
-		console::debug(hex_code);
-		console::debug("\r\n");
 
 		for (auto i = 0; i < times; i++)
 		{
-			strip.setPixelColor(pixel_number, Adafruit_NeoPixel::Color(r, g, b));
+      /*Serial.print(pixel_number);      
+      Serial.print("(");
+      Serial.print(r);
+      Serial.print(",");
+      Serial.print(g);
+      Serial.print(",");
+      Serial.print(b);
+      Serial.print(")");
+      Serial.println("");*/
+			
+			strip.setPixelColor(pixel_number, r, g, b);
 			pixel_number++;
 		}
 

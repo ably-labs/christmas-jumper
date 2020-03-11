@@ -1,6 +1,13 @@
 #include "MqttPixelProvider.h"
 #include "DataStructures.h"
 #include "ApiResponseParser.h"
+
+#if defined(ESP32)
+#include <ssl_client.h>
+#else
+#include <ESP8266WiFi.h>
+#endif
+
 #include <WiFiClientSecure.h>
 #include <PubSubClient.h>
 
@@ -8,7 +15,6 @@ WiFiClientSecure espClient;
 PubSubClient client(espClient);
 
 api_response lastMessage;
-api_response lastReturned;
 
 mqtt_pixel_provider::mqtt_pixel_provider() {
   lastMessage = no_data_loaded();
