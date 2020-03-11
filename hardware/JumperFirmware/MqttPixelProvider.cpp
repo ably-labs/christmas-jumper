@@ -1,7 +1,6 @@
 #include "MqttPixelProvider.h"
 #include "DataStructures.h"
 #include "ApiResponseParser.h"
-#include <ssl_client.h>
 #include <WiFiClientSecure.h>
 #include <PubSubClient.h>
 
