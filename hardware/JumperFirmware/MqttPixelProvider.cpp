@@ -2,20 +2,22 @@
 #include "DataStructures.h"
 #include "ApiResponseParser.h"
 #include <WiFiClientSecure.h>
-
-// This doesn't work in the Arduino IDE
-// You have to override the value defined in PubSubClient.h
-// But once you do, this implementation is fine.
-// Gonna try another libary to avoid this.
-// Edit in Arduino\libraries\PubSubClient\src\PubSubClient.h
-#define MQTT_MAX_PACKET_SIZE 4096
-
-#include <PubSubClient.h>
+#include <MQTT.h>
 
 WiFiClientSecure espClient;
-PubSubClient client(espClient);
+MQTTClient client(4096);
 
 api_response lastMessage;
+
+void messageReceived(String &topic, String &framedata) {
+  Serial.println("incoming: " + topic + " - " + framedata);
+  
+  if (framedata.equals("")) {
+    return;
+  }
+  
+  lastMessage = api_response_parser::parse(framedata);
+}
 
 void callback(char* topic, byte* payload, unsigned int length) {
   String framedata = "";
@@ -38,8 +40,8 @@ void ensureConnected(configuration* cfg_)
   if (!client.connected())
   {    
     espClient.setFingerprint(cfg_->mqtt.certificate);
-    client.setServer(cfg_->mqtt.server, cfg_->mqtt.port);
-    client.setCallback(callback);
+    client.begin(cfg_->mqtt.server, cfg_->mqtt.port, espClient);
+    client.onMessage(messageReceived);
 
     while (!client.connected()) 
     {    
@@ -52,8 +54,7 @@ void ensureConnected(configuration* cfg_)
       } 
       else 
       {
-        Serial.print("failed, rc=");
-        Serial.print(client.state());
+        Serial.print("failed");
         Serial.println(" try again in 5 seconds");
         delay(5000);
       }
