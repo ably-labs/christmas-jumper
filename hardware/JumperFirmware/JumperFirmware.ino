@@ -12,16 +12,10 @@
 #endif
 
 configuration cfg = {
-	//"asgard_router1", //  "david"; //
-	"ilikepie",
-	//"godhatesfangs", // "stephens"; //
-	"Goldfish54!",
-	"http://5f184016.ngrok.io:80",
-	true,
-  "mqtt.ably.io",
-  8883,
-  "3SwaWA.eWNKzg",
-  "iDGSDjPS1oSrYmXR"
+  { "asgard_router1", "godhatesfangs" },
+  { "http://5f184016.ngrok.io:80" },
+  { "mqtt.ably.io", 8883, "3SwaWA.eWNKzg", "iDGSDjPS1oSrYmXR", "3b b1 e6 46 12 f9 f4 ac 53 59 f4 97 99 ee 35 c9 3b 3b 46 11" },  
+  "mqtt"
 };
 
 pixel_provider* provider;
@@ -29,32 +23,27 @@ image_identity current_image = { "_", -1, default_delay };
 
 auto setup() -> void
 {
-	if (cfg.use_http)
-	{
+	if (cfg.connection_mode == "http")
 		provider = new http_api_pixel_provider();
-	}
 	else
-	{
 		provider = new mqtt_pixel_provider();
-	}
 	
 	provider->set_config(&cfg);
 	
 	snake_lights::init();
-  snake_lights::update_lights("ff0000,000000", "-1,0,1x255");
+  snake_lights::set_first_pixel("ff0000");
 
 	Serial.begin(115200);
 	delay(1000);
 
-	networking::ensure_wifi_connected(cfg.ssid, cfg.password);  
-  snake_lights::update_lights("00ff00,000000", "-1,0,1x255");
+	networking::ensure_wifi_connected(cfg.wifi.ssid, cfg.wifi.password);  
+  snake_lights::set_first_pixel("00ff00");
 }
 
 auto loop() -> void
 {
 	// console::log(F("Loop()"));
-
-	networking::ensure_wifi_connected(cfg.ssid, cfg.password);
+	networking::ensure_wifi_connected(cfg.wifi.ssid, cfg.wifi.password);
 
 	const auto response = provider->get_image_data(&current_image);
 	if (!response.loaded)
@@ -63,8 +52,7 @@ auto loop() -> void
 		return;
 	}
 	
-	api_response_parser::copy_to(current_image, response);
-	
+	api_response_parser::copy_to(current_image, response);	
 	console::log("Displaying " + response.image_key + " at frame " + current_image.frame_index + " wth a delay of " + current_image.frame_duration);
   
 	snake_lights::update_lights(response.palette, response.pixels);

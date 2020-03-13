@@ -12,6 +12,7 @@ class snake_lights
 public:
 	static void init();
 	static void update_lights(const String& palette, const String& pixels);
+  static void set_first_pixel(const String& hex_color);
 	static void error_lights();
 };
 

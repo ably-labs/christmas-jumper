@@ -11,16 +11,31 @@ constexpr auto default_delay = 1000;
 
 typedef struct
 {
-	const char* ssid;
-	const char* password;
-	String http_root;
-	bool use_http;
-  const char* mqttServer;
-  const int mqttPort;
-  const char* mqttUser;
-  const char* mqttPassword;  
-} configuration;
+  const char* ssid;
+  const char* password;  
+} wifiCredentials;
 
+typedef struct
+{
+  const char* server;
+  const int port;
+  const char* user;
+  const char* password;
+  const char* certificate;
+} mqttConfiguration;
+
+typedef struct
+{  
+  String root;
+} httpConfiguration;
+
+typedef struct
+{
+  wifiCredentials wifi;  
+  httpConfiguration http;
+  mqttConfiguration mqtt;  
+  const char* connection_mode;
+} configuration;
 
 typedef struct
 {

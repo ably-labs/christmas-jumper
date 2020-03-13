@@ -83,6 +83,11 @@ void snake_lights::update_lights(const String& palette, const String& pixels)
 	console::log(F("Lights set"));
 }
 
+void snake_lights::set_first_pixel(const String& hex_color)
+{  
+  snake_lights::update_lights(hex_color + ",000000", "-1,0,1x255");
+}
+
 void snake_lights::error_lights()
 {
 	strip.setPixelColor(0, Adafruit_NeoPixel::Color(255, 0, 0));
