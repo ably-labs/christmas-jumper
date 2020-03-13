@@ -7,18 +7,10 @@
 // You have to override the value defined in PubSubClient.h
 // But once you do, this implementation is fine.
 // Gonna try another libary to avoid this.
-
+// Edit in Arduino\libraries\PubSubClient\src\PubSubClient.h
 #define MQTT_MAX_PACKET_SIZE 4096
 
 #include <PubSubClient.h>
-
-mqttConfiguration mqttConf = {
-  "mqtt.ably.io",
-  8883,
-  "3SwaWA.eWNKzg",
-  "iDGSDjPS1oSrYmXR",
-  "3b b1 e6 46 12 f9 f4 ac 53 59 f4 97 99 ee 35 c9 3b 3b 46 11"
-};
 
 WiFiClientSecure espClient;
 PubSubClient client(espClient);
@@ -41,19 +33,19 @@ void callback(char* topic, byte* payload, unsigned int length) {
   lastMessage = api_response_parser::parse(framedata);
 }
 
-void ensureConnected() 
+void ensureConnected(configuration* cfg_) 
 {
   if (!client.connected())
   {    
-    espClient.setFingerprint(mqttConf.certificate);
-    client.setServer(mqttConf.server, mqttConf.port);
+    espClient.setFingerprint(cfg_->mqtt.certificate);
+    client.setServer(cfg_->mqtt.server, cfg_->mqtt.port);
     client.setCallback(callback);
 
     while (!client.connected()) 
     {    
       Serial.print("Attempting MQTT connection...");
   
-      if (client.connect("arduinoClient", mqttConf.user, mqttConf.password)) 
+      if (client.connect("arduinoClient", cfg_->mqtt.user, cfg_->mqtt.password)) 
       {
         Serial.println("connected");
         client.subscribe("jumper");
@@ -75,7 +67,7 @@ mqtt_pixel_provider::mqtt_pixel_provider() {
 
 api_response mqtt_pixel_provider::get_image_data(image_identity* current_image_ptr)
 {    
-  ensureConnected();
+  ensureConnected(cfg_);
   client.loop();
   
   const auto returnThis = lastMessage;

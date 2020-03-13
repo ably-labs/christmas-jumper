@@ -27,9 +27,9 @@ auto setup() -> void
 		provider = new http_api_pixel_provider();
 	else
 		provider = new mqtt_pixel_provider();
-	
-	provider->set_config(&cfg);
-	
+
+  provider->set_config(&cfg);
+  
 	snake_lights::init();
   snake_lights::set_first_pixel("ff0000");
 

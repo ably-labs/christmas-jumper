@@ -16,6 +16,7 @@ describe("Ably push notifications", () => {
 
     it("Publishes compressed image payload", async () => {
         await sut.publishToAbly("default");
+        // await sut.publishToAbly("let it snow! let it snow! let it snow!");
 
         expect(publishedData[0]).toBe("default`fc 1`fi -1`ff0000,000000`-1,0,1x255`");
     });
