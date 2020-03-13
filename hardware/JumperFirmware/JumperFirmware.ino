@@ -22,16 +22,18 @@ pixel_provider* provider;
 image_identity current_image = { "_", -1, default_delay };
 
 auto setup() -> void
-{
+{  
+  snake_lights::init();
+  snake_lights::set_first_pixel("ff0000");
+  
 	if (cfg.connection_mode == "http")
 		provider = new http_api_pixel_provider();
-	else
+	else if (cfg.connection_mode == "mqtt")
 		provider = new mqtt_pixel_provider();
+   else
+    provider = nullptr;
 
-  provider->set_config(&cfg);
-  
-	snake_lights::init();
-  snake_lights::set_first_pixel("ff0000");
+  provider->set_config(&cfg);  
 
 	Serial.begin(115200);
 	delay(1000);
